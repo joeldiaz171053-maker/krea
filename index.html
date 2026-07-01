@@ -3,114 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurador 3D - TecnoTrade PTY</title>
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <title>Configurador Visual - TecnoTrade PTY</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #f5f5f7; color: #1d1d1f; display: flex; height: 100vh; overflow: hidden; }
-        .app-container { display: flex; width: 100%; height: 100vh; }
-        .viewer-box { flex: 2; height: 100vh; background: radial-gradient(circle, #f9f9fb 0%, #e2e2e7 100%); position: relative; display: flex; justify-content: center; align-items: center; }
-        model-viewer { width: 100%; height: 100%; background-color: transparent; }
-        .control-panel { flex: 1; min-width: 400px; max-width: 500px; height: 100vh; background: #ffffff; border-left: 1px solid #d2d2d7; padding: 40px 30px; position: relative; display: flex; flex-direction: column; }
-        .header { margin-bottom: 25px; border-bottom: 1px solid #e5e5e7; padding-bottom: 15px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* ÁREA DEL VISOR CON EFECTO DE ROTACIÓN 3D */
+        .viewer-box {
+            flex: 2;
+            height: 100vh;
+            background: radial-gradient(circle, #ffffff 0%, #e2e2e7 100%);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 85%;
+            max-width: 420px;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Todas las imágenes ocupan el mismo espacio exacto */
+        .layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* La capa que esté activa se muestra y toma su tamaño real simulando el giro */
+        .layer.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Selector Flotante de Perspectiva (Frente / Lado) */
+        .view-toggle-container {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 6px;
+            border-radius: 25px;
+            display: flex;
+            gap: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .view-btn {
+            background: transparent;
+            border: none;
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #86868b;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .view-btn.active {
+            background: #ffffff;
+            color: #1d1d1f;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        /* PANEL DE CONTROL LATERAL */
+        .control-panel {
+            flex: 1;
+            min-width: 400px;
+            max-width: 500px;
+            height: 100vh;
+            background: #ffffff;
+            border-left: 1px solid #d2d2d7;
+            padding: 40px 30px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #e5e5e7;
+            padding-bottom: 15px;
+        }
+
         .header h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; }
         .header p { font-size: 14px; color: #86868b; margin-top: 4px; }
+
         .steps-indicator { margin-bottom: 30px; display: flex; gap: 10px; }
         .step-dot { padding: 6px 14px; font-size: 12px; font-weight: 600; background: #f5f5f7; color: #86868b; border-radius: 15px; }
         .step-dot.active { background: #0071e3; color: #ffffff; }
+
         .steps-container { flex: 1; overflow-y: auto; padding-bottom: 80px; }
         .step-content { display: none; }
         .step-content.active { display: block; }
+        
         h2 { font-size: 20px; font-weight: 600; margin-bottom: 20px; }
         .options-list { margin-bottom: 20px; }
-        .option-item { display: block; width: 100%; padding: 18px; background: #f5f5f7; border: 2px solid transparent; border-radius: 14px; margin-bottom: 12px; cursor: pointer; text-align: left; transition: all 0.2s ease; }
+        
+        .option-item {
+            display: block; width: 100%; padding: 18px; background: #f5f5f7;
+            border: 2px solid transparent; border-radius: 14px; margin-bottom: 12px;
+            cursor: pointer; text-align: left; transition: all 0.2s ease;
+        }
         .option-item:hover { background: #e8e8ed; }
         .option-item.selected { border-color: #0071e3; background: #ffffff; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.08); }
+        
         .option-title { font-weight: 600; font-size: 15px; display: block; }
         .option-desc { font-size: 12px; color: #86868b; margin-top: 4px; display: block; }
         .option-price { float: right; font-weight: 600; color: #0071e3; font-size: 15px; }
+
         .summary-box { background: #f5f5f7; border-radius: 14px; padding: 20px; margin-top: 15px; }
         .summary-line { font-size: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; }
         .summary-line span.val { font-weight: 500; color: #1d1d1f; }
         .summary-total { border-top: 1px solid #d2d2d7; padding-top: 15px; margin-top: 15px; font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; }
+
         .btn-whatsapp { background: #25D366; color: white; font-weight: 600; text-align: center; display: block; width: 100%; border-radius: 14px; padding: 16px; font-size: 16px; text-decoration: none; box-shadow: 0 4px 15px rgba(37,211,102,0.25); margin-top: 25px; }
+        
         .footer-nav { position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px 30px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-top: 1px solid #e5e5e7; display: flex; justify-content: flex-end; gap: 12px; }
         .btn { padding: 12px 26px; font-size: 14px; font-weight: 500; border-radius: 22px; cursor: pointer; border: none; }
         .btn-secondary { background: #f5f5f7; color: #0071e3; }
         .btn-primary { background: #0071e3; color: #ffffff; }
-        .texture-badge { position: absolute; top: 20px; left: 20px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); padding: 10px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #1d1d1f; border: 1px solid rgba(0,0,0,0.05); z-index: 10; pointer-events: none; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
+        
+        <!-- SECCIÓN IZQUIERDA: VISOR MULTIPLANO (EFECTO MOVIMIENTO) -->
         <div class="viewer-box">
-            <div class="texture-badge">✨ Acabado Crystal & Reflective Original</div>
-            
-            <model-viewer id="config-viewer" 
-                          src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_11.glb" 
-                          camera-controls 
-                          auto-rotate 
-                          interaction-prompt="auto" 
-                          shadow-intensity="1.5" 
-                          environment-image="legacy"
-                          exposure="1.2">
-            </model-viewer>
+            <div class="canvas-container">
+                <!-- Capas del iPhone 13 Pro Max Base -->
+                <img id="img-base-frente" class="layer active" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/38e20d00fb4073309629e9f49b1216fd4db3527e/13promaxfrente.jpg">
+                <img id="img-base-lado" class="layer" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/38e20d00fb4073309629e9f49b1216fd4db3527e/13promaxlado.jpg">
+                
+                <!-- Capas del Cover Celeste Superpuesto -->
+                <img id="img-cover-frente" class="layer" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/38e20d00fb4073309629e9f49b1216fd4db3527e/covercelestefrente13.jpg">
+                <img id="img-cover-lado" class="layer" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/a04815d16c2c1aa8f27692027f140ae00f4c1e15/cover13pmcelestelado.jpg">
+            </div>
+
+            <!-- Botones interactivos para alternar la vista y simular el giro 3D -->
+            <div class="view-toggle-container">
+                <button id="btn-view-frente" class="view-btn active" onclick="switchPerspective('frente')">Frente</button>
+                <button id="btn-view-lado" class="view-btn" onclick="switchPerspective('lado')">Perfil</button>
+            </div>
         </div>
 
+        <!-- SECCIÓN DERECHA: FLUJO DE COMPRA -->
         <div class="control-panel">
             <div class="header">
                 <h1>TecnoTrade PTY</h1>
-                <p>Configurador interactivo de accesorios premium</p>
+                <p>Personaliza tu dispositivo con acabados crystal premium</p>
             </div>
 
             <div class="steps-indicator">
-                <span class="step-dot active" id="dot-1">1. Dispositivo</span>
-                <span class="step-dot" id="dot-2">2. Accesorios</span>
-                <span class="step-dot" id="dot-3">3. Enviar Orden</span>
+                <span class="step-dot active" id="dot-1">1. Celular</span>
+                <span class="step-dot" id="dot-2">2. Cover</span>
+                <span class="step-dot" id="dot-3">3. Orden</span>
             </div>
 
             <div class="steps-container">
+                <!-- PASO 1: SELECCIÓN DE MODELO -->
                 <div class="step-content active" id="step-1">
-                    <h2>¿Cuál es tu modelo de iPhone?</h2>
+                    <h2>Selecciona tu dispositivo</h2>
                     <div class="options-list">
-                        <button class="option-item selected" onclick="selectModel('iPhone 11', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_11.glb')">
-                            <span class="option-title">iPhone 11</span>
-                            <span class="option-desc">Modelado con cover integrado oculto</span>
-                        </button>
-                        <button class="option-item" onclick="selectModel('iPhone 13 Pro Max', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/ae7f3ce056a515e36194ceb1ce1e15d347db3c4b/apple_iphone_13_pro_max.glb')">
+                        <button class="option-item selected" onclick="selectModel('iPhone 13 Pro Max')">
                             <span class="option-title">iPhone 13 Pro Max</span>
-                            <span class="option-desc">Modelado con cover integrado oculto</span>
-                        </button>
-                        <button class="option-item" onclick="selectModel('iPhone 14 Pro Max', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_14_pro_max.glb')">
-                            <span class="option-title">iPhone 14 Pro Max</span>
-                            <span class="option-desc">Modelado con cover integrado oculto</span>
+                            <span class="option-desc">Carga de planos duales sincronizados</span>
                         </button>
                     </div>
                 </div>
 
+                <!-- PASO 2: SELECCIÓN DE COVERS -->
                 <div class="step-content" id="step-2">
-                    <h2>Añade tus covers y protectores</h2>
+                    <h2>Escoge tu cover protector</h2>
                     <div class="options-list">
-                        <button class="option-item" id="opt-cover" onclick="toggleAccessoryVisibility('cover', 'Case Protector Premium', 12.00, 'opt-cover', 'Material_Cover')">
-                            <span class="option-price">$12.00</span>
-                            <span class="option-title">Case Básico Protector</span>
-                            <span class="option-desc">Muestra el protector adaptado a tu modelo</span>
+                        <button class="option-item" id="btn-case-celeste" onclick="toggleCover('Cover Celeste Premium', 15.00, 'btn-case-celeste')">
+                            <span class="option-price">$15.00</span>
+                            <span class="option-title">Cover Celeste Silicone</span>
+                            <span class="option-desc">Ajuste milimétrico texturizado de lado y de frente</span>
                         </button>
                     </div>
                 </div>
 
+                <!-- PASO 3: RESUMEN Y WHATSAPP -->
                 <div class="step-content" id="step-3">
-                    <h2>Resumen de tu Configuración</h2>
+                    <h2>Confirmación de Orden</h2>
                     <div class="summary-box">
-                        <div class="summary-line"><span>iPhone seleccionado:</span> <span class="val" id="sum-model">iPhone 11</span></div>
-                        <div class="summary-line"><span>Cover:</span> <span class="val" id="sum-cover">Ninguno</span></div>
-                        <div class="summary-total"><span>Total del Pedido:</span> <span id="sum-total">$0.00</span></div>
+                        <div class="summary-line"><span>Dispositivo:</span> <span class="val" id="sum-model">iPhone 13 Pro Max</span></div>
+                        <div class="summary-line"><span>Cover seleccionado:</span> <span class="val" id="sum-cover">Ninguno</span></div>
+                        <div class="summary-total"><span>Total Estimado:</span> <span id="sum-total">$0.00</span></div>
                     </div>
-                    <a href="#" id="whatsapp-link" target="_blank" class="btn-whatsapp">📲 Enviar Pedido por WhatsApp</a>
+                    <a href="#" id="whatsapp-link" target="_blank" class="btn-whatsapp">📲 Enviar Orden por WhatsApp</a>
                 </div>
             </div>
 
+            <!-- Botones Inferiores Fijos -->
             <div class="footer-nav">
                 <button class="btn btn-secondary" id="btn-back" onclick="changeStep(-1)" style="display: none;">Atrás</button>
                 <button class="btn btn-primary" id="btn-next" onclick="changeStep(1)">Continuar</button>
@@ -120,68 +238,60 @@
 
     <script>
         let currentStep = 1;
-        let selectedModel = "iPhone 11";
-        let isCoverActive = false;
+        let selectedModel = "iPhone 13 Pro Max";
+        let currentPerspective = "frente"; // Controla el ángulo actual (frente o lado)
+        let isCoverSelected = false;
+        
         let selection = { cover: { name: "Ninguno", price: 0 } };
 
-        const viewer = document.getElementById("config-viewer");
-
-        // Regla automática: Cada vez que un teléfono termine de cargar, apaga el cover para que empiece limpio
-        viewer.addEventListener('load', () => {
-            applyMaterialState("Material_Cover", isCoverActive);
-        });
-
-        function selectModel(modelName, modelPath) {
-            selectedModel = modelName;
-            const items = document.querySelectorAll("#step-1 .option-item");
-            items.forEach(item => item.classList.remove("selected"));
-            if (event && event.currentTarget) event.currentTarget.classList.add("selected");
+        // MOTOR DE MOVIMIENTO SIMULADO: Apaga y prende las capas de forma coordinada
+        function switchPerspective(side) {
+            currentPerspective = side;
             
-            // Cambia el teléfono base
-            viewer.setAttribute("src", modelPath);
-            updateSummaryData();
+            // Actualizar botones de vista
+            document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+            document.getElementById(`btn-view-${side}`).classList.add("active");
+
+            // Ocultar todas las imágenes primero
+            document.querySelectorAll(".layer").forEach(img => img.classList.remove("active"));
+
+            if (!isCoverSelected) {
+                // Si no hay cover, solo rotamos el iPhone base
+                document.getElementById(`img-base-${side}`).classList.add("active");
+            } else {
+                // Si hay cover activo, mostramos directamente la capa del teléfono con el cover puesto
+                document.getElementById(`img-cover-${side}`).classList.add("active");
+            }
         }
 
-        function toggleAccessoryVisibility(type, name, price, elementId, materialName) {
+        // CONTROL DE CARRO DE ACCESORIOS
+        function toggleCover(name, price, elementId) {
             const element = document.getElementById(elementId);
             
-            if (selection[type].name === name) {
-                selection[type] = { name: "Ninguno", price: 0 };
+            if (selection.cover.name === name) {
+                selection.cover = { name: "Ninguno", price: 0 };
                 element.classList.remove("selected");
-                isCoverActive = false;
+                isCoverSelected = false;
             } else {
-                selection[type] = { name: name, price: price };
+                selection.cover = { name: name, price: price };
                 element.classList.add("selected");
-                isCoverActive = true;
+                isCoverSelected = true;
             }
-            
-            // Llama al motor gráfico para alterar el material interno
-            applyMaterialState(materialName, isCoverActive);
+
+            // Refresca la perspectiva actual para pintar el cambio inmediatamente con la animación de giro
+            switchPerspective(currentPerspective);
             updateSummaryData();
         }
 
-        // CONTROL ULTRA EFICIENTE DE REFLEJOS Y TRANSPARENCIA
-        function applyMaterialState(materialName, show) {
-            if (!viewer.model) return;
-            const material = viewer.model.materials.find(m => m.name === materialName);
-            
-            if (material) {
-                if (show) {
-                    // Revela el cover con acabado plástico transparente pulido (Reflective Crystal)
-                    material.pbrMetallicRoughness.setBaseColorFactor([1.0, 1.0, 1.0, 0.85]); 
-                    material.pbrMetallicRoughness.setRoughnessFactor(0.05); // Súper brillante
-                    material.setAlphaMode("BLEND");
-                } else {
-                    // Lo vuelve invisible al 100%
-                    material.pbrMetallicRoughness.setBaseColorFactor([1.0, 1.0, 1.0, 0.0]);
-                    material.setAlphaMode("BLEND");
-                }
-            }
+        function selectModel(modelName) {
+            selectedModel = modelName;
+            updateSummaryData();
         }
 
         function updateSummaryData() {
             document.getElementById("sum-model").innerText = selectedModel;
             document.getElementById("sum-cover").innerText = selection.cover.name + (selection.cover.price > 0 ? ` ($${selection.cover.price.toFixed(2)})` : "");
+            
             const total = selection.cover.price;
             document.getElementById("sum-total").innerText = `$${total.toFixed(2)}`;
             buildWhatsAppLink(total);
@@ -189,11 +299,12 @@
 
         function buildWhatsAppLink(total) {
             const phoneNumber = "50760000000"; // Tu número de TecnoTrade PTY
-            let message = `🔥 *¡Hola TecnoTrade PTY! Deseo realizar un pedido desde el configurador 3D:*\\n\\n`;
+            let message = `🔥 *¡Hola TecnoTrade PTY! Deseo realizar un pedido desde el configurador multiplano:*\\n\\n`;
             message += `📱 *Modelo:* ${selectedModel}\\n`;
             message += `📦 *Cover:* ${selection.cover.name}\\n\\n`;
             message += `💰 *Total Estimado:* $${total.toFixed(2)}\\n\\n`;
-            message += `📍 _Por favor confírmame disponibilidad para coordinar la entrega._`;
+            message += `📍 _Por favor confírmame disponibilidad para coordinar la entrega en las zonas locales._`;
+            
             const encodedMessage = encodeURIComponent(message);
             document.getElementById("whatsapp-link").setAttribute("href", `https://wa.me/${phoneNumber}?text=${encodedMessage}`);
         }
@@ -202,9 +313,11 @@
             currentStep += direction;
             if (currentStep < 1) currentStep = 1;
             if (currentStep > 3) currentStep = 3;
+            
             document.querySelectorAll(".step-content").forEach(el => el.classList.remove("active"));
             document.getElementById(`step-${currentStep}`).classList.add("active");
             document.getElementById("btn-back").style.display = (currentStep === 1) ? "none" : "inline-block";
+            
             if (currentStep === 3) {
                 document.getElementById("btn-next").style.display = "none";
                 updateSummaryData(); 
