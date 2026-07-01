@@ -3,52 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurador Visual - TecnoTrade PTY</title>
+    <title>Configurador Premium - TecnoTrade PTY</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #f5f5f7;
-            color: #1d1d1f;
+            background-color: #000000; /* Fondo oscuro profundo para resaltar los colores del iPhone */
+            color: #ffffff;
             display: flex;
+            flex-direction: column;
             height: 100vh;
             overflow: hidden;
         }
 
         .app-container {
             display: flex;
+            flex-direction: column;
             width: 100%;
             height: 100vh;
+            position: relative;
         }
 
-        /* ÁREA DEL VISOR CON EFECTO DE ROTACIÓN 3D */
+        /* 1. ÁREA VISUAL PRINCIPAL (OCUPA LA MITAD SUPERIOR EN MÓVIL) */
         .viewer-box {
-            flex: 2;
-            height: 100vh;
-            background: radial-gradient(circle, #ffffff 0%, #e2e2e7 100%);
+            flex: 1;
+            width: 100%;
+            background: radial-gradient(circle, #1c1c1e 0%, #000000 100%);
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            padding-bottom: 20px;
         }
 
         .canvas-container {
             position: relative;
-            width: 85%;
-            max-width: 420px;
+            width: 75%;
+            max-width: 320px;
             aspect-ratio: 1 / 1;
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-top: 20px;
         }
 
-        /* Todas las imágenes ocupan el mismo espacio exacto */
         .layer {
             position: absolute;
             width: 100%;
@@ -56,215 +61,362 @@
             object-fit: contain;
             pointer-events: none;
             opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 0.3s ease-in-out, transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: scale(0.93) rotate(-2deg);
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                        transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        /* La capa que esté activa se muestra y toma su tamaño real simulando el giro */
         .layer.active {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1) rotate(0deg);
         }
 
-        /* Selector Flotante de Perspectiva (Frente / Lado) */
+        /* SELECTOR DE PERSPECTIVA ULTRA MINIMALISTA */
         .view-toggle-container {
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 6px;
-            border-radius: 25px;
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 4px;
+            border-radius: 30px;
             display: flex;
-            gap: 5px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            gap: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             z-index: 10;
         }
 
         .view-btn {
             background: transparent;
             border: none;
-            padding: 8px 18px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #86868b;
+            padding: 6px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #8e8e93;
             cursor: pointer;
-            border-radius: 20px;
-            transition: all 0.2s ease;
+            border-radius: 30px;
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .view-btn.active {
-            background: #ffffff;
-            color: #1d1d1f;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
         }
 
-        /* PANEL DE CONTROL LATERAL */
+
+        /* 2. PANEL DE CONFIGURACIÓN INFERIOR (ESTILO BOTTOM SHEET) */
         .control-panel {
-            flex: 1;
-            min-width: 400px;
-            max-width: 500px;
-            height: 100vh;
-            background: #ffffff;
-            border-left: 1px solid #d2d2d7;
-            padding: 40px 30px;
-            position: relative;
+            background: rgba(28, 28, 30, 0.85);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px 24px 0 0;
+            padding: 24px 24px 100px 24px; /* Espacio extra abajo para los botones flotantes */
             display: flex;
             flex-direction: column;
+            height: 45vh; /* Se expande en la mitad inferior de la pantalla */
+            z-index: 20;
         }
 
         .header {
-            margin-bottom: 25px;
-            border-bottom: 1px solid #e5e5e7;
-            padding-bottom: 15px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        .header h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; }
-        .header p { font-size: 14px; color: #86868b; margin-top: 4px; }
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+        }
 
-        .steps-indicator { margin-bottom: 30px; display: flex; gap: 10px; }
-        .step-dot { padding: 6px 14px; font-size: 12px; font-weight: 600; background: #f5f5f7; color: #86868b; border-radius: 15px; }
-        .step-dot.active { background: #0071e3; color: #ffffff; }
+        /* Indicador de Línea de Progreso Minimalista */
+        .steps-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
 
-        .steps-container { flex: 1; overflow-y: auto; padding-bottom: 80px; }
-        .step-content { display: none; }
-        .step-content.active { display: block; }
-        
-        h2 { font-size: 20px; font-weight: 600; margin-bottom: 20px; }
-        .options-list { margin-bottom: 20px; }
-        
+        .step-dot {
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            width: 18px;
+            background: #0071e3;
+            border-radius: 3px;
+        }
+
+
+        /* CONTENEDOR DESLIZABLE DE CONTENIDO */
+        .steps-container {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #aeae2;
+            margin-bottom: 15px;
+            color: #8e8e93;
+        }
+
+        /* GRID DE BOTONES PREMIUM */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
         .option-item {
-            display: block; width: 100%; padding: 18px; background: #f5f5f7;
-            border: 2px solid transparent; border-radius: 14px; margin-bottom: 12px;
-            cursor: pointer; text-align: left; transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            color: #ffffff;
         }
-        .option-item:hover { background: #e8e8ed; }
-        .option-item.selected { border-color: #0071e3; background: #ffffff; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.08); }
-        
-        .option-title { font-weight: 600; font-size: 15px; display: block; }
-        .option-desc { font-size: 12px; color: #86868b; margin-top: 4px; display: block; }
-        .option-price { float: right; font-weight: 600; color: #0071e3; font-size: 15px; }
 
-        .summary-box { background: #f5f5f7; border-radius: 14px; padding: 20px; margin-top: 15px; }
-        .summary-line { font-size: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; }
-        .summary-line span.val { font-weight: 500; color: #1d1d1f; }
-        .summary-total { border-top: 1px solid #d2d2d7; padding-top: 15px; margin-top: 15px; font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; }
+        .option-item:active {
+            transform: scale(0.98);
+        }
 
-        .btn-whatsapp { background: #25D366; color: white; font-weight: 600; text-align: center; display: block; width: 100%; border-radius: 14px; padding: 16px; font-size: 16px; text-decoration: none; box-shadow: 0 4px 15px rgba(37,211,102,0.25); margin-top: 25px; }
-        
-        .footer-nav { position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px 30px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-top: 1px solid #e5e5e7; display: flex; justify-content: flex-end; gap: 12px; }
-        .btn { padding: 12px 26px; font-size: 14px; font-weight: 500; border-radius: 22px; cursor: pointer; border: none; }
-        .btn-secondary { background: #f5f5f7; color: #0071e3; }
-        .btn-primary { background: #0071e3; color: #ffffff; }
+        .option-item.selected {
+            border-color: #0071e3;
+            background: rgba(0, 113, 227, 0.15);
+        }
+
+        .option-title {
+            font-weight: 500;
+            font-size: 14px;
+            display: block;
+        }
+
+        .option-desc {
+            font-size: 11px;
+            color: #8e8e93;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .option-price {
+            font-weight: 600;
+            color: #0071e3;
+            font-size: 14px;
+        }
+
+        /* CAJA DE RESUMEN FINAL */
+        .summary-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .summary-line {
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            color: #8e8e93;
+        }
+
+        .summary-line span.val {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        .summary-total {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 12px;
+            margin-top: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            color: #ffffff;
+        }
+
+        /* 3. BARRA DE NAVEGACIÓN FLOTANTE FIJA */
+        .footer-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 16px 24px 30px 24px;
+            background: linear-gradient(to top, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 30;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 14px;
+            cursor: pointer;
+            border: none;
+            text-align: center;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+        }
+
+        .btn-primary {
+            background: #0071e3;
+            color: #ffffff;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            box-shadow: 0 4px 15px rgba(37,211,102,0.2);
+        }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         
-        <!-- SECCIÓN IZQUIERDA: VISOR MULTIPLANO (EFECTO MOVIMIENTO) -->
+        <!-- MITAD SUPERIOR: VISOR DE CAPAS DE IMAGEN CON GIRO -->
         <div class="viewer-box">
             <div class="canvas-container">
-                <!-- Capas del iPhone 13 Pro Max Base -->
+                <!-- Chasis Base del Teléfono -->
                 <img id="img-base-frente" class="layer active" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/38e20d00fb4073309629e9f49b1216fd4db3527e/13promaxfrente.jpg">
                 <img id="img-base-lado" class="layer" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/38e20d00fb4073309629e9f49b1216fd4db3527e/13promaxlado.jpg">
                 
-                <!-- Capas del Cover Celeste Superpuesto -->
+                <!-- Covers Integrados "Vestidos" -->
                 <img id="img-cover-frente" class="layer" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/38e20d00fb4073309629e9f49b1216fd4db3527e/covercelestefrente13.jpg">
                 <img id="img-cover-lado" class="layer" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/a04815d16c2c1aa8f27692027f140ae00f4c1e15/cover13pmcelestelado.jpg">
             </div>
 
-            <!-- Botones interactivos para alternar la vista y simular el giro 3D -->
+            <!-- Controlador Estético de Perspectiva -->
             <div class="view-toggle-container">
                 <button id="btn-view-frente" class="view-btn active" onclick="switchPerspective('frente')">Frente</button>
                 <button id="btn-view-lado" class="view-btn" onclick="switchPerspective('lado')">Perfil</button>
             </div>
         </div>
 
-        <!-- SECCIÓN DERECHA: FLUJO DE COMPRA -->
+        <!-- MITAD INFERIOR: MENU DESLIZABLE (ESTILO APPLE) -->
         <div class="control-panel">
             <div class="header">
                 <h1>TecnoTrade PTY</h1>
-                <p>Personaliza tu dispositivo con acabados crystal premium</p>
             </div>
 
             <div class="steps-indicator">
-                <span class="step-dot active" id="dot-1">1. Celular</span>
-                <span class="step-dot" id="dot-2">2. Cover</span>
-                <span class="step-dot" id="dot-3">3. Orden</span>
+                <span class="step-dot active" id="dot-1"></span>
+                <span class="step-dot" id="dot-2"></span>
+                <span class="step-dot" id="dot-3"></span>
             </div>
 
             <div class="steps-container">
-                <!-- PASO 1: SELECCIÓN DE MODELO -->
+                
+                <!-- PASO 1: MODELO DE DISPOSITIVO -->
                 <div class="step-content active" id="step-1">
-                    <h2>Selecciona tu dispositivo</h2>
+                    <h2>1. Selecciona tu iPhone</h2>
                     <div class="options-list">
                         <button class="option-item selected" onclick="selectModel('iPhone 13 Pro Max')">
-                            <span class="option-title">iPhone 13 Pro Max</span>
-                            <span class="option-desc">Carga de planos duales sincronizados</span>
+                            <div>
+                                <span class="option-title">iPhone 13 Pro Max</span>
+                                <span class="option-desc">Chasis premium con módulo de tres cámaras</span>
+                            </div>
                         </button>
                     </div>
                 </div>
 
                 <!-- PASO 2: SELECCIÓN DE COVERS -->
                 <div class="step-content" id="step-2">
-                    <h2>Escoge tu cover protector</h2>
+                    <h2>2. Elige un Cover Protector</h2>
                     <div class="options-list">
-                        <button class="option-item" id="btn-case-celeste" onclick="toggleCover('Cover Celeste Premium', 15.00, 'btn-case-celeste')">
+                        <button class="option-item" id="btn-case-celeste" onclick="toggleCover('Cover Silicone Celeste', 15.00, 'btn-case-celeste')">
+                            <div>
+                                <span class="option-title">Silicona Azul Celeste</span>
+                                <span class="option-desc">Mantiene el acabado crystal original del chasis</span>
+                            </div>
                             <span class="option-price">$15.00</span>
-                            <span class="option-title">Cover Celeste Silicone</span>
-                            <span class="option-desc">Ajuste milimétrico texturizado de lado y de frente</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- PASO 3: RESUMEN Y WHATSAPP -->
+                <!-- PASO 3: RESUMEN Y ENVÍO -->
                 <div class="step-content" id="step-3">
-                    <h2>Confirmación de Orden</h2>
+                    <h2>3. Revisa tu pedido</h2>
                     <div class="summary-box">
-                        <div class="summary-line"><span>Dispositivo:</span> <span class="val" id="sum-model">iPhone 13 Pro Max</span></div>
-                        <div class="summary-line"><span>Cover seleccionado:</span> <span class="val" id="sum-cover">Ninguno</span></div>
-                        <div class="summary-total"><span>Total Estimado:</span> <span id="sum-total">$0.00</span></div>
+                        <div class="summary-line"><span>iPhone:</span> <span class="val" id="sum-model">iPhone 13 Pro Max</span></div>
+                        <div class="summary-line"><span>Cover:</span> <span class="val" id="sum-cover">Ninguno</span></div>
+                        <div class="summary-total"><span>Total estimado:</span> <span id="sum-total">$0.00</span></div>
                     </div>
-                    <a href="#" id="whatsapp-link" target="_blank" class="btn-whatsapp">📲 Enviar Orden por WhatsApp</a>
                 </div>
+
             </div>
 
-            <!-- Botones Inferiores Fijos -->
+            <!-- NAVEGACIÓN FLOTANTE FIJA INFERIOR -->
             <div class="footer-nav">
-                <button class="btn btn-secondary" id="btn-back" onclick="changeStep(-1)" style="display: none;">Atrás</button>
+                <button class="btn btn-secondary" id="btn-back" onclick="changeStep(-1)" style="visibility: hidden;">Atrás</button>
                 <button class="btn btn-primary" id="btn-next" onclick="changeStep(1)">Continuar</button>
+                <a href="#" id="whatsapp-link" target="_blank" class="btn btn-whatsapp" style="display: none;">Enviar Orden</a>
             </div>
+
         </div>
     </div>
 
     <script>
         let currentStep = 1;
         let selectedModel = "iPhone 13 Pro Max";
-        let currentPerspective = "frente"; // Controla el ángulo actual (frente o lado)
+        let currentPerspective = "frente"; 
         let isCoverSelected = false;
-        
         let selection = { cover: { name: "Ninguno", price: 0 } };
 
-        // MOTOR DE MOVIMIENTO SIMULADO: Apaga y prende las capas de forma coordinada
+        // INTERACTIVIDAD MULTIPLANO (GIRO)
         function switchPerspective(side) {
             currentPerspective = side;
             
-            // Actualizar botones de vista
             document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
             document.getElementById(`btn-view-${side}`).classList.add("active");
 
-            // Ocultar todas las imágenes primero
             document.querySelectorAll(".layer").forEach(img => img.classList.remove("active"));
 
             if (!isCoverSelected) {
-                // Si no hay cover, solo rotamos el iPhone base
                 document.getElementById(`img-base-${side}`).classList.add("active");
             } else {
-                // Si hay cover activo, mostramos directamente la capa del teléfono con el cover puesto
                 document.getElementById(`img-cover-${side}`).classList.add("active");
             }
         }
 
-        // CONTROL DE CARRO DE ACCESORIOS
+        // SELECCIÓN DEL COVER
         function toggleCover(name, price, elementId) {
             const element = document.getElementById(elementId);
             
@@ -278,13 +430,25 @@
                 isCoverSelected = true;
             }
 
-            // Refresca la perspectiva actual para pintar el cambio inmediatamente con la animación de giro
             switchPerspective(currentPerspective);
             updateSummaryData();
         }
 
         function selectModel(modelName) {
             selectedModel = modelName;
+            updateSummaryData();
+        }
+
+        // SOLUCIÓN AL PROBLEMA DEL BOTÓN ATRÁS (LIMPIEZA AUTOMÁTICA)
+        function resetAccessoriesAndVisuals() {
+            isCoverSelected = false;
+            selection.cover = { name: "Ninguno", price: 0 };
+            
+            // Quitar clase "selected" de los botones del menú
+            document.querySelectorAll("#step-2 .option-item").forEach(el => el.classList.remove("selected"));
+            
+            // Forzar al visualizador a regresar a las fotos del teléfono base limpio
+            switchPerspective(currentPerspective);
             updateSummaryData();
         }
 
@@ -298,32 +462,46 @@
         }
 
         function buildWhatsAppLink(total) {
-            const phoneNumber = "50760000000"; // Tu número de TecnoTrade PTY
-            let message = `🔥 *¡Hola TecnoTrade PTY! Deseo realizar un pedido desde el configurador multiplano:*\\n\\n`;
+            const phoneNumber = "50760000000"; // Tu número comercial de Panamá
+            let message = `🔥 *¡Hola TecnoTrade PTY! Deseo realizar un pedido:*\\n\\n`;
             message += `📱 *Modelo:* ${selectedModel}\\n`;
             message += `📦 *Cover:* ${selection.cover.name}\\n\\n`;
-            message += `💰 *Total Estimado:* $${total.toFixed(2)}\\n\\n`;
-            message += `📍 _Por favor confírmame disponibilidad para coordinar la entrega en las zonas locales._`;
+            message += `💰 *Total:* $${total.toFixed(2)}\\n\\n`;
+            message += `📍 _Por favor confírmame disponibilidad para coordinar la entrega._`;
             
             const encodedMessage = encodeURIComponent(message);
             document.getElementById("whatsapp-link").setAttribute("href", `https://wa.me/${phoneNumber}?text=${encodedMessage}`);
         }
 
+        // CONTROL DE PASOS DINÁMICO REPARADO
         function changeStep(direction) {
+            // Logística correctora: Si el usuario va hacia atrás desde el paso 2 al 1, limpiamos el accesorio puesto
+            if (currentStep === 2 && direction === -1) {
+                resetAccessoriesAndVisuals();
+            }
+
             currentStep += direction;
             if (currentStep < 1) currentStep = 1;
             if (currentStep > 3) currentStep = 3;
             
             document.querySelectorAll(".step-content").forEach(el => el.classList.remove("active"));
             document.getElementById(`step-${currentStep}`).classList.add("active");
-            document.getElementById("btn-back").style.display = (currentStep === 1) ? "none" : "inline-block";
+
+            document.querySelectorAll(".step-dot").forEach(el => el.classList.remove("active"));
+            for(let i = 1; i <= currentStep; i++) {
+                document.getElementById(`dot-${i}`).classList.add("active");
+            }
+            
+            // Control de visibilidad de botones usando propiedades de estilo limpias
+            document.getElementById("btn-back").style.visibility = (currentStep === 1) ? "hidden" : "visible";
             
             if (currentStep === 3) {
                 document.getElementById("btn-next").style.display = "none";
+                document.getElementById("whatsapp-link").style.display = "block";
                 updateSummaryData(); 
             } else {
-                document.getElementById("btn-next").style.display = "inline-block";
-                document.getElementById("btn-next").innerText = "Continuar";
+                document.getElementById("btn-next").style.display = "block";
+                document.getElementById("whatsapp-link").style.display = "none";
             }
         }
     </script>
