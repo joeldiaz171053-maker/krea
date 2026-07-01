@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configurador 3D - TecnoTrade PTY</title>
+    <!-- Importa el componente 3D interactivo de Google -->
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
         * {
@@ -286,11 +287,13 @@
 
     <div class="app-container">
         
+        <!-- SECCIÓN IZQUIERDA: RENDERIZADOR 3D INTERACTIVO -->
         <div class="viewer-box">
             <div class="texture-badge">✨ Acabado Crystal & Reflective Original</div>
             
+            <!-- Inicia por defecto cargando el iPhone 11 de tu repositorio -->
             <model-viewer id="config-viewer" 
-                          src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/ae7f3ce056a515e36194ceb1ce1e15d347db3c4b/apple_iphone_13_pro_max.glb" 
+                          src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_11.glb" 
                           camera-controls 
                           auto-rotate 
                           interaction-prompt="auto" 
@@ -300,6 +303,7 @@
             </model-viewer>
         </div>
 
+        <!-- SECCIÓN DERECHA: PANEL LATERAL DE PASOS -->
         <div class="control-panel">
             
             <div class="header">
@@ -307,6 +311,7 @@
                 <p>Configurador interactivo de accesorios premium</p>
             </div>
 
+            <!-- Línea de Progreso -->
             <div class="steps-indicator">
                 <span class="step-dot active" id="dot-1">1. Dispositivo</span>
                 <span class="step-dot" id="dot-2">2. Accesorios</span>
@@ -315,28 +320,33 @@
 
             <div class="steps-container">
                 
+                <!-- PASO 1: SELECCIÓN DEL MODELO (Rutas actualizadas a tus enlaces RAW) -->
                 <div class="step-content active" id="step-1">
                     <h2>¿Cuál es tu modelo de iPhone?</h2>
                     <div class="options-list">
-                        <button class="option-item selected" onclick="selectModel('iPhone 13 Pro Max', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/ae7f3ce056a515e36194ceb1ce1e15d347db3c4b/apple_iphone_13_pro_max.glb')">
+                        
+                        <!-- iPhone 11 -->
+                        <button class="option-item selected" onclick="selectModel('iPhone 11', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_11.glb')">
+                            <span class="option-title">iPhone 11</span>
+                            <span class="option-desc">Modelado oficial con cámara dual</span>
+                        </button>
+
+                        <!-- iPhone 13 Pro Max -->
+                        <button class="option-item" onclick="selectModel('iPhone 13 Pro Max', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/ae7f3ce056a515e36194ceb1ce1e15d347db3c4b/apple_iphone_13_pro_max.glb')">
                             <span class="option-title">iPhone 13 Pro Max</span>
-                            <span class="option-desc">Modelado oficial cargado desde tu repositorio</span>
+                            <span class="option-desc">Modelado de alta precisión LiDAR</span>
                         </button>
-                        <button class="option-item" onclick="selectModel('iPhone 14 Pro Max', 'assets/models/iphone14promax.glb')">
+
+                        <!-- iPhone 14 Pro Max -->
+                        <button class="option-item" onclick="selectModel('iPhone 14 Pro Max', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_14_pro_max.glb')">
                             <span class="option-title">iPhone 14 Pro Max</span>
-                            <span class="option-desc">Módulo de triple cámara con sensor principal de 48MP</span>
+                            <span class="option-desc">Módulo de triple cámara con Dynamic Island</span>
                         </button>
-                        <button class="option-item" onclick="selectModel('iPhone 15 Pro Max', 'assets/models/iphone15promax.glb')">
-                            <span class="option-title">iPhone 15 Pro Max</span>
-                            <span class="option-desc">Acabado lateral de titanio pulido</span>
-                        </button>
-                        <button class="option-item" onclick="selectModel('iPhone 16 Pro Max', 'assets/models/iphone16promax.glb')">
-                            <span class="option-title">iPhone 16 Pro Max</span>
-                            <span class="option-desc">Última generación con bordes ultra delgados</span>
-                        </button>
+                        
                     </div>
                 </div>
 
+                <!-- PASO 2: SELECCIÓN DE ACCESORIOS COMERCIALES -->
                 <div class="step-content" id="step-2">
                     <h2>Añade tus covers y protectores</h2>
                     
@@ -373,6 +383,7 @@
                     </div>
                 </div>
 
+                <!-- PASO 3: RESUMEN Y BOTÓN DE ACCIÓN COMPLETA -->
                 <div class="step-content" id="step-3">
                     <h2>Resumen de tu Configuración</h2>
                     <p style="font-size: 14px; color:#6e6e73; margin-bottom: 20px;">
@@ -380,13 +391,14 @@
                     </p>
                     
                     <div class="summary-box">
-                        <div class="summary-line"><span>iPhone seleccionado:</span> <span class="val" id="sum-model">iPhone 13 Pro Max</span></div>
+                        <div class="summary-line"><span>iPhone seleccionado:</span> <span class="val" id="sum-model">iPhone 11</span></div>
                         <div class="summary-line"><span>Cover:</span> <span class="val" id="sum-cover">Ninguno</span></div>
                         <div class="summary-line"><span>Protector Cámara:</span> <span class="val" id="sum-camara">Ninguno</span></div>
                         <div class="summary-line"><span>Protector Pantalla:</span> <span class="val" id="sum-pantalla">Ninguno</span></div>
                         <div class="summary-total"><span>Total del Pedido:</span> <span id="sum-total">$0.00</span></div>
                     </div>
 
+                    <!-- Enlace Dinámico a WhatsApp -->
                     <a href="#" id="whatsapp-link" target="_blank" class="btn-whatsapp">
                         📲 Enviar Pedido Completo por WhatsApp
                     </a>
@@ -394,6 +406,7 @@
 
             </div>
 
+            <!-- Botones Inferiores de Navegación del Flujo -->
             <div class="footer-nav">
                 <button class="btn btn-secondary" id="btn-back" onclick="changeStep(-1)" style="display: none;">Atrás</button>
                 <button class="btn btn-primary" id="btn-next" onclick="changeStep(1)">Continuar</button>
@@ -405,7 +418,7 @@
     <script>
         // Estado inicial del configurador
         let currentStep = 1;
-        let selectedModel = "iPhone 13 Pro Max";
+        let selectedModel = "iPhone 11";
         let selection = {
             cover: { name: "Ninguno", price: 0 },
             camara: { name: "Ninguno", price: 0 },
@@ -420,7 +433,11 @@
             
             const items = document.querySelectorAll("#step-1 .option-item");
             items.forEach(item => item.classList.remove("selected"));
-            event.currentTarget.classList.add("selected");
+            
+            // Corregido el acceso al evento para navegadores modernos
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add("selected");
+            }
             
             // Renderiza el nuevo archivo 3D de inmediato
             viewer.setAttribute("src", modelPath);
@@ -459,7 +476,7 @@
 
         // Generador Automático del Mensaje Codificado para WhatsApp Comercial
         function buildWhatsAppLink(total) {
-            // Nota: Cambia este número por tu número de atención comercial real de TecnoTrade PTY
+            // Nota: Recuerda cambiar este número por tu WhatsApp real de TecnoTrade PTY
             const phoneNumber = "50760000000"; 
             
             let message = `🔥 *¡Hola TecnoTrade PTY! Deseo realizar un pedido desde el configurador 3D:*\\n\\n`;
