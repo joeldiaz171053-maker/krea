@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configurador 3D - TecnoTrade PTY</title>
-    <!-- Importa el componente 3D de Google -->
+    <!-- Importa el componente 3D interactivo de Google -->
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
         * {
@@ -22,12 +22,14 @@
             overflow: hidden;
         }
 
+        /* Contenedor Principal Split-Screen */
         .app-container {
             display: flex;
             width: 100%;
             height: 100vh;
         }
 
+        /* Zona del Visor 3D (Izquierda) */
         .viewer-box {
             flex: 2;
             height: 100vh;
@@ -44,6 +46,7 @@
             background-color: transparent;
         }
 
+        /* Panel de Control Lateral (Derecha) */
         .control-panel {
             flex: 1;
             min-width: 400px;
@@ -57,6 +60,7 @@
             flex-direction: column;
         }
 
+        /* Cabecera de la Tienda */
         .header {
             margin-bottom: 25px;
             border-bottom: 1px solid #e5e5e7;
@@ -75,6 +79,7 @@
             margin-top: 4px;
         }
 
+        /* Indicador de Pasos */
         .steps-indicator {
             margin-bottom: 30px;
             display: flex;
@@ -88,6 +93,7 @@
             background: #f5f5f7;
             color: #86868b;
             border-radius: 15px;
+            transition: all 0.3s ease;
         }
 
         .step-dot.active {
@@ -95,6 +101,7 @@
             color: #ffffff;
         }
 
+        /* Contenedor de Secciones Dinámicas */
         .steps-container {
             flex: 1;
             overflow-y: auto;
@@ -115,6 +122,7 @@
             margin-bottom: 20px;
         }
 
+        /* Lista de Opciones Interactivas */
         .options-list {
             margin-bottom: 20px;
         }
@@ -162,6 +170,7 @@
             font-size: 15px;
         }
 
+        /* Caja de Resumen de Compra */
         .summary-box {
             background: #f5f5f7;
             border-radius: 14px;
@@ -191,6 +200,7 @@
             justify-content: space-between;
         }
 
+        /* Botón de Enlace a WhatsApp Comercial */
         .btn-whatsapp {
             background: #25D366;
             color: white;
@@ -206,6 +216,7 @@
             margin-top: 25px;
         }
 
+        /* Barra de Navegación Inferior Fija */
         .footer-nav {
             position: absolute;
             bottom: 0;
@@ -239,6 +250,7 @@
             color: #ffffff;
         }
 
+        /* Etiqueta Flotante de Calidad Premium */
         .texture-badge {
             position: absolute;
             top: 20px;
@@ -260,10 +272,11 @@
 
     <div class="app-container">
         
+        <!-- SECCIÓN IZQUIERDA: VISOR INTERACTIVO -->
         <div class="viewer-box">
             <div class="texture-badge">✨ Acabado Crystal & Reflective Original</div>
             
-            <!-- Cargamos el chasis del iPhone 13 Pro Max como base principal de inicio -->
+            <!-- Iniciamos cargando el iPhone 13 Pro Max de tu repositorio como base -->
             <model-viewer id="config-viewer" 
                           src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/ae7f3ce056a515e36194ceb1ce1e15d347db3c4b/apple_iphone_13_pro_max.glb" 
                           camera-controls 
@@ -275,6 +288,7 @@
             </model-viewer>
         </div>
 
+        <!-- SECCIÓN DERECHA: PANEL LATERAL -->
         <div class="control-panel">
             
             <div class="header">
@@ -290,7 +304,7 @@
 
             <div class="steps-container">
                 
-                <!-- PASO 1: MODELOS -->
+                <!-- PASO 1: MODELO -->
                 <div class="step-content active" id="step-1">
                     <h2>¿Cuál es tu modelo de iPhone?</h2>
                     <div class="options-list">
@@ -309,23 +323,23 @@
                     </div>
                 </div>
 
-                <!-- PASO 2: ACCESORIOS -->
+                <!-- PASO 2: ACCESORIOS CON ENLACE INDEPENDIENTE FORZADO -->
                 <div class="step-content" id="step-2">
                     <h2>Añade tus covers y protectores</h2>
                     
                     <h3 style="font-size:13px; text-transform:uppercase; color:#86868b; letter-spacing:0.5px; margin: 15px 0 10px 0;">Covers Disponibles</h3>
                     <div class="options-list">
-                        <!-- Botón interactivo que busca el material interno del .glb -->
-                        <button class="option-item" id="opt-cover-basic" onclick="toggleMaterialAccessory('cover', 'Case Básico 13 Pro Max', 12.00, 'opt-cover-basic', 'Material_Cover_Basic')">
+                        <!-- Conectado directamente a tu archivo suelto iphone13_pro_basic_case.glb -->
+                        <button class="option-item" id="opt-cover-basic" onclick="toggleAccessory('cover', 'Case Básico 13 Pro Max', 12.00, 'opt-cover-basic', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/db0aa9383a92999691da36c6496c980afb4aa4ee/iphone13_pro_basic_case.glb')">
                             <span class="option-price">$12.00</span>
                             <span class="option-title">Case Básico Protector</span>
-                            <span class="option-desc">Activar visualización de textura crystal sobre el teléfono</span>
+                            <span class="option-desc">Superponer carcasa independiente desde tu GitHub</span>
                         </button>
                     </div>
 
                     <h3 style="font-size:13px; text-transform:uppercase; color:#86868b; letter-spacing:0.5px; margin: 20px 0 10px 0;">Protector de Cámaras</h3>
                     <div class="options-list">
-                        <button class="option-item" id="opt-cam-lens" onclick="toggleMaterialAccessory('camara', 'Vidrio Templado HD', 8.50, 'opt-cam-lens', 'Material_Protector_Camara')">
+                        <button class="option-item" id="opt-cam-lens" onclick="toggleAccessory('camara', 'Vidrio Templado HD para Lentes', 8.50, 'opt-cam-lens', '')">
                             <span class="option-price">$8.50</span>
                             <span class="option-title">Protector de Cristales Individual</span>
                             <span class="option-desc">Cápsulas de vidrio templado HD</span>
@@ -333,11 +347,11 @@
                     </div>
                 </div>
 
-                <!-- PASO 3: ENVIAR ORDEN -->
+                <!-- PASO 3: RESUMEN Y WHATSAPP -->
                 <div class="step-content" id="step-3">
                     <h2>Resumen de tu Configuración</h2>
                     <p style="font-size: 14px; color:#6e6e73; margin-bottom: 20px;">
-                        Verifica que todo esté correcto para enviar la lista preconfigurada a nuestro WhatsApp.
+                        Verifica que todo esté correcto. Tu pedido se enviará listo a nuestro equipo de ventas de TecnoTrade PTY.
                     </p>
                     
                     <div class="summary-box">
@@ -372,11 +386,8 @@
 
         const viewer = document.getElementById("config-viewer");
 
-        // Ocultar los accesorios internos por defecto tan pronto cargue el modelo 3D
-        viewer.addEventListener('load', () => {
-            applyMaterialVisibility('Material_Cover_Basic', false);
-            applyMaterialVisibility('Material_Protector_Camara', false);
-        });
+        // Almacén para guardar la referencia directa de la carcasa cargada
+        let loadedCoverObject = null;
 
         function selectModel(modelName, modelPath) {
             selectedModel = modelName;
@@ -384,51 +395,65 @@
             items.forEach(item => item.classList.remove("selected"));
             if (event && event.currentTarget) event.currentTarget.classList.add("selected");
             
-            // Reiniciar selecciones al cambiar chasis
+            // Forzar limpieza del accesorio si cambian de celular
+            removeActiveAccessory();
             selection.cover = { name: "Ninguno", price: 0 };
-            selection.camara = { name: "Ninguno", price: 0 };
-            document.querySelectorAll("#step-2 .option-item").forEach(s => s.classList.remove("selected"));
-
+            
             viewer.setAttribute("src", modelPath);
             updateSummaryData();
         }
 
-        // LÓGICA DE CONTROL VISUAL: Muestra u oculta alterando la transparencia del material
-        function toggleMaterialAccessory(type, name, price, elementId, materialName) {
+        function toggleAccessory(type, name, price, elementId, accessoryGlbUrl) {
             const element = document.getElementById(elementId);
             
             if (selection[type].name === name) {
                 selection[type] = { name: "Ninguno", price: 0 };
                 element.classList.remove("selected");
-                applyMaterialVisibility(materialName, false);
+                removeActiveAccessory();
             } else {
                 const siblings = element.parentNode.querySelectorAll(".option-item");
                 siblings.forEach(s => s.classList.remove("selected"));
                 
                 selection[type] = { name: name, price: price };
                 element.classList.add("selected");
-                applyMaterialVisibility(materialName, true);
+                
+                if (accessoryGlbUrl !== '') {
+                    loadAccessoryOverlay(accessoryGlbUrl);
+                }
             }
             
             updateSummaryData();
         }
 
-        // Modifica las propiedades PBR del material en tiempo real
-        function applyMaterialVisibility(materialName, visible) {
+        // MOTOR REPARADO: Extrae y fuerza el renderizado del nodo hijo de forma nativa
+        async function loadAccessoryOverlay(url) {
+            // Espera de seguridad por si el iPhone no ha terminado de renderizar sus texturas
             if (!viewer.model) return;
             
-            // Busca el material exacto asignado en Blender
-            const material = viewer.model.materials.find(m => m.name === materialName);
-            if (material) {
-                if (visible) {
-                    // Lo hace visible con una base de color sólida y reflejo cristalino premium
-                    material.pbrMetallicRoughness.setBaseColorFactor([0.9, 0.9, 0.9, 1.0]); 
-                    material.setAlphaMode("OPAQUE");
-                } else {
-                    // Lo vuelve completamente invisible (Opacidad 0)
-                    material.pbrMetallicRoughness.setBaseColorFactor([1.0, 1.0, 1.0, 0.0]);
-                    material.setAlphaMode("BLEND");
-                }
+            removeActiveAccessory();
+            
+            try {
+                // Forzamos al visualizador a procesar la URL cruda de tu archivo suelto
+                const gltf = await viewer.createSceneFromUrl(url);
+                
+                // Guardamos la referencia directa del objeto 3D
+                loadedCoverObject = gltf;
+                
+                // Lo inyectamos a la escena principal. Al heredar el punto (0,0,0), se acopla solo.
+                viewer.model.scene.add(loadedCoverObject);
+                
+                // Pequeño truco técnico: Forzamos un rediseño de luces para que el cover tome reflejos
+                viewer.queueRender(); 
+            } catch (error) {
+                console.error("Error inyectando el archivo .glb:", error);
+            }
+        }
+
+        function removeActiveAccessory() {
+            if (viewer.model && loadedCoverObject) {
+                viewer.model.scene.remove(loadedCoverObject);
+                loadedCoverObject = null;
+                viewer.queueRender();
             }
         }
 
