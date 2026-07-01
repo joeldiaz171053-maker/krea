@@ -4,281 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Configurador 3D - TecnoTrade PTY</title>
-    <!-- Importa el componente 3D interactivo de Google -->
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        body {
-            background-color: #f5f5f7;
-            color: #1d1d1f;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Contenedor Principal Split-Screen */
-        .app-container {
-            display: flex;
-            width: 100%;
-            height: 100vh;
-        }
-
-        /* Zona del Visor 3D (Izquierda) */
-        .viewer-box {
-            flex: 2;
-            height: 100vh;
-            background: radial-gradient(circle, #f9f9fb 0%, #e2e2e7 100%);
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        model-viewer {
-            width: 100%;
-            height: 100%;
-            background-color: transparent;
-        }
-
-        /* Panel de Control Lateral (Derecha) */
-        .control-panel {
-            flex: 1;
-            min-width: 400px;
-            max-width: 500px;
-            height: 100vh;
-            background: #ffffff;
-            border-left: 1px solid #d2d2d7;
-            padding: 40px 30px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Cabecera de la Tienda */
-        .header {
-            margin-bottom: 25px;
-            border-bottom: 1px solid #e5e5e7;
-            padding-bottom: 15px;
-        }
-
-        .header h1 {
-            font-size: 26px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .header p {
-            font-size: 14px;
-            color: #86868b;
-            margin-top: 4px;
-        }
-
-        /* Indicador de Pasos */
-        .steps-indicator {
-            margin-bottom: 30px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .step-dot {
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 600;
-            background: #f5f5f7;
-            color: #86868b;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .step-dot.active {
-            background: #0071e3;
-            color: #ffffff;
-        }
-
-        /* Contenedor de Secciones Dinámicas */
-        .steps-container {
-            flex: 1;
-            overflow-y: auto;
-            padding-bottom: 80px;
-        }
-
-        .step-content {
-            display: none;
-        }
-
-        .step-content.active {
-            display: block;
-        }
-
-        h2 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        /* Lista de Opciones Interactivas */
-        .options-list {
-            margin-bottom: 20px;
-        }
-
-        .option-item {
-            display: block;
-            width: 100%;
-            padding: 18px;
-            background: #f5f5f7;
-            border: 2px solid transparent;
-            border-radius: 14px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            text-align: left;
-            transition: all 0.2s ease;
-        }
-
-        .option-item:hover {
-            background: #e8e8ed;
-        }
-
-        .option-item.selected {
-            border-color: #0071e3;
-            background: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 113, 227, 0.08);
-        }
-
-        .option-title {
-            font-weight: 600;
-            font-size: 15px;
-            display: block;
-        }
-
-        .option-desc {
-            font-size: 12px;
-            color: #86868b;
-            margin-top: 4px;
-            display: block;
-        }
-
-        .option-price {
-            float: right;
-            font-weight: 600;
-            color: #0071e3;
-            font-size: 15px;
-        }
-
-        /* Caja de Resumen de Compra */
-        .summary-box {
-            background: #f5f5f7;
-            border-radius: 14px;
-            padding: 20px;
-            margin-top: 15px;
-        }
-
-        .summary-line {
-            font-size: 14px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .summary-line span.val {
-            font-weight: 500;
-            color: #1d1d1f;
-        }
-
-        .summary-total {
-            border-top: 1px solid #d2d2d7;
-            padding-top: 15px;
-            margin-top: 15px;
-            font-size: 18px;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* Botón de Enlace a WhatsApp Comercial */
-        .btn-whatsapp {
-            background: #25D366;
-            color: white;
-            font-weight: 600;
-            text-align: center;
-            display: block;
-            width: 100%;
-            border-radius: 14px;
-            padding: 16px;
-            font-size: 16px;
-            text-decoration: none;
-            box-shadow: 0 4px 15px rgba(37,211,102,0.25);
-            margin-top: 25px;
-        }
-
-        /* Barra de Navegación Inferior Fija */
-        .footer-nav {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px 30px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid #e5e5e7;
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-
-        .btn {
-            padding: 12px 26px;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 22px;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-secondary {
-            background: #f5f5f7;
-            color: #0071e3;
-        }
-
-        .btn-primary {
-            background: #0071e3;
-            color: #ffffff;
-        }
-
-        /* Etiqueta Flotante de Calidad Premium */
-        .texture-badge {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #1d1d1f;
-            border: 1px solid rgba(0,0,0,0.05);
-            z-index: 10;
-            pointer-events: none;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f5f5f7; color: #1d1d1f; display: flex; height: 100vh; overflow: hidden; }
+        .app-container { display: flex; width: 100%; height: 100vh; }
+        .viewer-box { flex: 2; height: 100vh; background: radial-gradient(circle, #f9f9fb 0%, #e2e2e7 100%); position: relative; display: flex; justify-content: center; align-items: center; }
+        model-viewer { width: 100%; height: 100%; background-color: transparent; }
+        .control-panel { flex: 1; min-width: 400px; max-width: 500px; height: 100vh; background: #ffffff; border-left: 1px solid #d2d2d7; padding: 40px 30px; position: relative; display: flex; flex-direction: column; }
+        .header { margin-bottom: 25px; border-bottom: 1px solid #e5e5e7; padding-bottom: 15px; }
+        .header h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.5px; }
+        .header p { font-size: 14px; color: #86868b; margin-top: 4px; }
+        .steps-indicator { margin-bottom: 30px; display: flex; gap: 10px; }
+        .step-dot { padding: 6px 14px; font-size: 12px; font-weight: 600; background: #f5f5f7; color: #86868b; border-radius: 15px; }
+        .step-dot.active { background: #0071e3; color: #ffffff; }
+        .steps-container { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+        .step-content { display: none; }
+        .step-content.active { display: block; }
+        h2 { font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+        .options-list { margin-bottom: 20px; }
+        .option-item { display: block; width: 100%; padding: 18px; background: #f5f5f7; border: 2px solid transparent; border-radius: 14px; margin-bottom: 12px; cursor: pointer; text-align: left; transition: all 0.2s ease; }
+        .option-item:hover { background: #e8e8ed; }
+        .option-item.selected { border-color: #0071e3; background: #ffffff; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.08); }
+        .option-title { font-weight: 600; font-size: 15px; display: block; }
+        .option-desc { font-size: 12px; color: #86868b; margin-top: 4px; display: block; }
+        .option-price { float: right; font-weight: 600; color: #0071e3; font-size: 15px; }
+        .summary-box { background: #f5f5f7; border-radius: 14px; padding: 20px; margin-top: 15px; }
+        .summary-line { font-size: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .summary-line span.val { font-weight: 500; color: #1d1d1f; }
+        .summary-total { border-top: 1px solid #d2d2d7; padding-top: 15px; margin-top: 15px; font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; }
+        .btn-whatsapp { background: #25D366; color: white; font-weight: 600; text-align: center; display: block; width: 100%; border-radius: 14px; padding: 16px; font-size: 16px; text-decoration: none; box-shadow: 0 4px 15px rgba(37,211,102,0.25); margin-top: 25px; }
+        .footer-nav { position: absolute; bottom: 0; left: 0; width: 100%; padding: 20px 30px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-top: 1px solid #e5e5e7; display: flex; justify-content: flex-end; gap: 12px; }
+        .btn { padding: 12px 26px; font-size: 14px; font-weight: 500; border-radius: 22px; cursor: pointer; border: none; }
+        .btn-secondary { background: #f5f5f7; color: #0071e3; }
+        .btn-primary { background: #0071e3; color: #ffffff; }
+        .texture-badge { position: absolute; top: 20px; left: 20px; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); padding: 10px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; color: #1d1d1f; border: 1px solid rgba(0,0,0,0.05); z-index: 10; pointer-events: none; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        
-        <!-- SECCIÓN IZQUIERDA: VISOR INTERACTIVO -->
         <div class="viewer-box">
             <div class="texture-badge">✨ Acabado Crystal & Reflective Original</div>
             
-            <!-- Iniciamos cargando el iPhone 13 Pro Max de tu repositorio como base -->
             <model-viewer id="config-viewer" 
-                          src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/ae7f3ce056a515e36194ceb1ce1e15d347db3c4b/apple_iphone_13_pro_max.glb" 
+                          src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_11.glb" 
                           camera-controls 
                           auto-rotate 
                           interaction-prompt="auto" 
@@ -288,9 +58,7 @@
             </model-viewer>
         </div>
 
-        <!-- SECCIÓN DERECHA: PANEL LATERAL -->
         <div class="control-panel">
-            
             <div class="header">
                 <h1>TecnoTrade PTY</h1>
                 <p>Configurador interactivo de accesorios premium</p>
@@ -303,91 +71,65 @@
             </div>
 
             <div class="steps-container">
-                
-                <!-- PASO 1: MODELO -->
                 <div class="step-content active" id="step-1">
                     <h2>¿Cuál es tu modelo de iPhone?</h2>
                     <div class="options-list">
-                        <button class="option-item selected" onclick="selectModel('iPhone 13 Pro Max', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/ae7f3ce056a515e36194ceb1ce1e15d347db3c4b/apple_iphone_13_pro_max.glb')">
-                            <span class="option-title">iPhone 13 Pro Max</span>
-                            <span class="option-desc">Modelado de alta precisión LiDAR</span>
-                        </button>
-                        <button class="option-item" onclick="selectModel('iPhone 11', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_11.glb')">
+                        <button class="option-item selected" onclick="selectModel('iPhone 11', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_11.glb')">
                             <span class="option-title">iPhone 11</span>
-                            <span class="option-desc">Modelado oficial con cámara dual</span>
+                            <span class="option-desc">Modelado con cover integrado oculto</span>
+                        </button>
+                        <button class="option-item" onclick="selectModel('iPhone 13 Pro Max', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/ae7f3ce056a515e36194ceb1ce1e15d347db3c4b/apple_iphone_13_pro_max.glb')">
+                            <span class="option-title">iPhone 13 Pro Max</span>
+                            <span class="option-desc">Modelado con cover integrado oculto</span>
                         </button>
                         <button class="option-item" onclick="selectModel('iPhone 14 Pro Max', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_14_pro_max.glb')">
                             <span class="option-title">iPhone 14 Pro Max</span>
-                            <span class="option-desc">Módulo de triple cámara con Dynamic Island</span>
+                            <span class="option-desc">Modelado con cover integrado oculto</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- PASO 2: ACCESORIOS CON ENLACE INDEPENDIENTE FORZADO -->
                 <div class="step-content" id="step-2">
                     <h2>Añade tus covers y protectores</h2>
-                    
-                    <h3 style="font-size:13px; text-transform:uppercase; color:#86868b; letter-spacing:0.5px; margin: 15px 0 10px 0;">Covers Disponibles</h3>
                     <div class="options-list">
-                        <!-- Conectado directamente a tu archivo suelto iphone13_pro_basic_case.glb -->
-                        <button class="option-item" id="opt-cover-basic" onclick="toggleAccessory('cover', 'Case Básico 13 Pro Max', 12.00, 'opt-cover-basic', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/db0aa9383a92999691da36c6496c980afb4aa4ee/iphone13_pro_basic_case.glb')">
+                        <button class="option-item" id="opt-cover" onclick="toggleAccessoryVisibility('cover', 'Case Protector Premium', 12.00, 'opt-cover', 'Material_Cover')">
                             <span class="option-price">$12.00</span>
                             <span class="option-title">Case Básico Protector</span>
-                            <span class="option-desc">Superponer carcasa independiente desde tu GitHub</span>
-                        </button>
-                    </div>
-
-                    <h3 style="font-size:13px; text-transform:uppercase; color:#86868b; letter-spacing:0.5px; margin: 20px 0 10px 0;">Protector de Cámaras</h3>
-                    <div class="options-list">
-                        <button class="option-item" id="opt-cam-lens" onclick="toggleAccessory('camara', 'Vidrio Templado HD para Lentes', 8.50, 'opt-cam-lens', '')">
-                            <span class="option-price">$8.50</span>
-                            <span class="option-title">Protector de Cristales Individual</span>
-                            <span class="option-desc">Cápsulas de vidrio templado HD</span>
+                            <span class="option-desc">Muestra el protector adaptado a tu modelo</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- PASO 3: RESUMEN Y WHATSAPP -->
                 <div class="step-content" id="step-3">
                     <h2>Resumen de tu Configuración</h2>
-                    <p style="font-size: 14px; color:#6e6e73; margin-bottom: 20px;">
-                        Verifica que todo esté correcto. Tu pedido se enviará listo a nuestro equipo de ventas de TecnoTrade PTY.
-                    </p>
-                    
                     <div class="summary-box">
-                        <div class="summary-line"><span>iPhone seleccionado:</span> <span class="val" id="sum-model">iPhone 13 Pro Max</span></div>
+                        <div class="summary-line"><span>iPhone seleccionado:</span> <span class="val" id="sum-model">iPhone 11</span></div>
                         <div class="summary-line"><span>Cover:</span> <span class="val" id="sum-cover">Ninguno</span></div>
-                        <div class="summary-line"><span>Protector Cámara:</span> <span class="val" id="sum-camara">Ninguno</span></div>
                         <div class="summary-total"><span>Total del Pedido:</span> <span id="sum-total">$0.00</span></div>
                     </div>
-
-                    <a href="#" id="whatsapp-link" target="_blank" class="btn-whatsapp">
-                        📲 Enviar Pedido Completo por WhatsApp
-                    </a>
+                    <a href="#" id="whatsapp-link" target="_blank" class="btn-whatsapp">📲 Enviar Pedido por WhatsApp</a>
                 </div>
-
             </div>
 
             <div class="footer-nav">
                 <button class="btn btn-secondary" id="btn-back" onclick="changeStep(-1)" style="display: none;">Atrás</button>
                 <button class="btn btn-primary" id="btn-next" onclick="changeStep(1)">Continuar</button>
             </div>
-
         </div>
     </div>
 
     <script>
         let currentStep = 1;
-        let selectedModel = "iPhone 13 Pro Max";
-        let selection = {
-            cover: { name: "Ninguno", price: 0 },
-            camara: { name: "Ninguno", price: 0 }
-        };
+        let selectedModel = "iPhone 11";
+        let isCoverActive = false;
+        let selection = { cover: { name: "Ninguno", price: 0 } };
 
         const viewer = document.getElementById("config-viewer");
 
-        // Almacén para guardar la referencia directa de la carcasa cargada
-        let loadedCoverObject = null;
+        // Regla automática: Cada vez que un teléfono termine de cargar, apaga el cover para que empiece limpio
+        viewer.addEventListener('load', () => {
+            applyMaterialState("Material_Cover", isCoverActive);
+        });
 
         function selectModel(modelName, modelPath) {
             selectedModel = modelName;
@@ -395,89 +137,63 @@
             items.forEach(item => item.classList.remove("selected"));
             if (event && event.currentTarget) event.currentTarget.classList.add("selected");
             
-            // Forzar limpieza del accesorio si cambian de celular
-            removeActiveAccessory();
-            selection.cover = { name: "Ninguno", price: 0 };
-            
+            // Cambia el teléfono base
             viewer.setAttribute("src", modelPath);
             updateSummaryData();
         }
 
-        function toggleAccessory(type, name, price, elementId, accessoryGlbUrl) {
+        function toggleAccessoryVisibility(type, name, price, elementId, materialName) {
             const element = document.getElementById(elementId);
             
             if (selection[type].name === name) {
                 selection[type] = { name: "Ninguno", price: 0 };
                 element.classList.remove("selected");
-                removeActiveAccessory();
+                isCoverActive = false;
             } else {
-                const siblings = element.parentNode.querySelectorAll(".option-item");
-                siblings.forEach(s => s.classList.remove("selected"));
-                
                 selection[type] = { name: name, price: price };
                 element.classList.add("selected");
-                
-                if (accessoryGlbUrl !== '') {
-                    loadAccessoryOverlay(accessoryGlbUrl);
-                }
+                isCoverActive = true;
             }
             
+            // Llama al motor gráfico para alterar el material interno
+            applyMaterialState(materialName, isCoverActive);
             updateSummaryData();
         }
 
-        // MOTOR REPARADO: Extrae y fuerza el renderizado del nodo hijo de forma nativa
-        async function loadAccessoryOverlay(url) {
-            // Espera de seguridad por si el iPhone no ha terminado de renderizar sus texturas
+        // CONTROL ULTRA EFICIENTE DE REFLEJOS Y TRANSPARENCIA
+        function applyMaterialState(materialName, show) {
             if (!viewer.model) return;
+            const material = viewer.model.materials.find(m => m.name === materialName);
             
-            removeActiveAccessory();
-            
-            try {
-                // Forzamos al visualizador a procesar la URL cruda de tu archivo suelto
-                const gltf = await viewer.createSceneFromUrl(url);
-                
-                // Guardamos la referencia directa del objeto 3D
-                loadedCoverObject = gltf;
-                
-                // Lo inyectamos a la escena principal. Al heredar el punto (0,0,0), se acopla solo.
-                viewer.model.scene.add(loadedCoverObject);
-                
-                // Pequeño truco técnico: Forzamos un rediseño de luces para que el cover tome reflejos
-                viewer.queueRender(); 
-            } catch (error) {
-                console.error("Error inyectando el archivo .glb:", error);
-            }
-        }
-
-        function removeActiveAccessory() {
-            if (viewer.model && loadedCoverObject) {
-                viewer.model.scene.remove(loadedCoverObject);
-                loadedCoverObject = null;
-                viewer.queueRender();
+            if (material) {
+                if (show) {
+                    // Revela el cover con acabado plástico transparente pulido (Reflective Crystal)
+                    material.pbrMetallicRoughness.setBaseColorFactor([1.0, 1.0, 1.0, 0.85]); 
+                    material.pbrMetallicRoughness.setRoughnessFactor(0.05); // Súper brillante
+                    material.setAlphaMode("BLEND");
+                } else {
+                    // Lo vuelve invisible al 100%
+                    material.pbrMetallicRoughness.setBaseColorFactor([1.0, 1.0, 1.0, 0.0]);
+                    material.setAlphaMode("BLEND");
+                }
             }
         }
 
         function updateSummaryData() {
             document.getElementById("sum-model").innerText = selectedModel;
             document.getElementById("sum-cover").innerText = selection.cover.name + (selection.cover.price > 0 ? ` ($${selection.cover.price.toFixed(2)})` : "");
-            document.getElementById("sum-camara").innerText = selection.camara.name + (selection.camara.price > 0 ? ` ($${selection.camara.price.toFixed(2)})` : "");
-            
-            const total = selection.cover.price + selection.camara.price;
+            const total = selection.cover.price;
             document.getElementById("sum-total").innerText = `$${total.toFixed(2)}`;
-            
             buildWhatsAppLink(total);
         }
 
         function buildWhatsAppLink(total) {
-            const phoneNumber = "50760000000"; 
-            
+            const phoneNumber = "50760000000"; // Tu número de TecnoTrade PTY
             let message = `🔥 *¡Hola TecnoTrade PTY! Deseo realizar un pedido desde el configurador 3D:*\\n\\n`;
             message += `📱 *Modelo:* ${selectedModel}\\n`;
-            message += `📦 *Cover:* ${selection.cover.name}\\n`;
-            message += `📸 *Protector Cámara:* ${selection.camara.name}\\n\\n`;
+            message += `📦 *Cover:* ${selection.cover.name}\\n\\n`;
             message += `💰 *Total Estimado:* $${total.toFixed(2)}\\n\\n`;
             message += `📍 _Por favor confírmame disponibilidad para coordinar la entrega._`;
-            
             const encodedMessage = encodeURIComponent(message);
             document.getElementById("whatsapp-link").setAttribute("href", `https://wa.me/${phoneNumber}?text=${encodedMessage}`);
         }
@@ -486,17 +202,9 @@
             currentStep += direction;
             if (currentStep < 1) currentStep = 1;
             if (currentStep > 3) currentStep = 3;
-            
             document.querySelectorAll(".step-content").forEach(el => el.classList.remove("active"));
             document.getElementById(`step-${currentStep}`).classList.add("active");
-            
-            document.querySelectorAll(".step-dot").forEach(el => el.classList.remove("active"));
-            for(let i = 1; i <= currentStep; i++) {
-                document.getElementById(`dot-${i}`).classList.add("active");
-            }
-            
             document.getElementById("btn-back").style.display = (currentStep === 1) ? "none" : "inline-block";
-            
             if (currentStep === 3) {
                 document.getElementById("btn-next").style.display = "none";
                 updateSummaryData(); 
