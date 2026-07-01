@@ -105,7 +105,7 @@
         .steps-container {
             flex: 1;
             overflow-y: auto;
-            padding-bottom: 80px; /* Espacio para el footer fijo */
+            padding-bottom: 80px;
         }
 
         .step-content {
@@ -291,9 +291,9 @@
         <div class="viewer-box">
             <div class="texture-badge">✨ Acabado Crystal & Reflective Original</div>
             
-            <!-- Inicia por defecto cargando el iPhone 11 de tu repositorio -->
+            <!-- Inicia por defecto cargando el iPhone 13 Pro Max de tu repositorio -->
             <model-viewer id="config-viewer" 
-                          src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_11.glb" 
+                          src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/ae7f3ce056a515e36194ceb1ce1e15d347db3c4b/apple_iphone_13_pro_max.glb" 
                           camera-controls 
                           auto-rotate 
                           interaction-prompt="auto" 
@@ -320,21 +320,21 @@
 
             <div class="steps-container">
                 
-                <!-- PASO 1: SELECCIÓN DEL MODELO (Rutas actualizadas a tus enlaces RAW) -->
+                <!-- PASO 1: SELECCIÓN DEL MODELO -->
                 <div class="step-content active" id="step-1">
                     <h2>¿Cuál es tu modelo de iPhone?</h2>
                     <div class="options-list">
                         
-                        <!-- iPhone 11 -->
-                        <button class="option-item selected" onclick="selectModel('iPhone 11', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_11.glb')">
-                            <span class="option-title">iPhone 11</span>
-                            <span class="option-desc">Modelado oficial con cámara dual</span>
-                        </button>
-
                         <!-- iPhone 13 Pro Max -->
-                        <button class="option-item" onclick="selectModel('iPhone 13 Pro Max', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/ae7f3ce056a515e36194ceb1ce1e15d347db3c4b/apple_iphone_13_pro_max.glb')">
+                        <button class="option-item selected" onclick="selectModel('iPhone 13 Pro Max', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/ae7f3ce056a515e36194ceb1ce1e15d347db3c4b/apple_iphone_13_pro_max.glb')">
                             <span class="option-title">iPhone 13 Pro Max</span>
                             <span class="option-desc">Modelado de alta precisión LiDAR</span>
+                        </button>
+
+                        <!-- iPhone 11 -->
+                        <button class="option-item" onclick="selectModel('iPhone 11', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/6d81f4839dc27ab5c80b4d0977fb0d42991cd3e5/iphone_11.glb')">
+                            <span class="option-title">iPhone 11</span>
+                            <span class="option-desc">Modelado oficial con cámara dual</span>
                         </button>
 
                         <!-- iPhone 14 Pro Max -->
@@ -346,44 +346,37 @@
                     </div>
                 </div>
 
-                <!-- PASO 2: SELECCIÓN DE ACCESORIOS COMERCIALES -->
+                <!-- PASO 2: SELECCIÓN DE ACCESORIOS CON SUPERPOSICIÓN REAL -->
                 <div class="step-content" id="step-2">
                     <h2>Añade tus covers y protectores</h2>
                     
                     <h3 style="font-size:13px; text-transform:uppercase; color:#86868b; letter-spacing:0.5px; margin: 15px 0 10px 0;">Covers Disponibles</h3>
                     <div class="options-list">
-                        <button class="option-item" id="opt-cover-clear" onclick="toggleAccessory('cover', 'Transparente Clear Pro', 15.00, 'opt-cover-clear')">
-                            <span class="option-price">$15.00</span>
-                            <span class="option-title">Cover Clear Pro Anti-Impacto</span>
-                            <span class="option-desc">Diseño cristalino transparente que resalta el color original</span>
+                        <!-- El botón ahora llama directamente a tu archivo .glb del Case real -->
+                        <button class="option-item" id="opt-cover-basic" onclick="toggleAccessory('cover', 'Case Básico 13 Pro Max', 12.00, 'opt-cover-basic', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/db0aa9383a92999691da36c6496c980afb4aa4ee/iphone13_pro_basic_case.glb')">
+                            <span class="option-price">$12.00</span>
+                            <span class="option-title">Case Básico Protector</span>
+                            <span class="option-desc">Superposición 3D real de tu modelo de carcasa</span>
                         </button>
-                        <button class="option-item" id="opt-cover-carbon" onclick="toggleAccessory('cover', 'Carbon Fiber MagSafe', 25.00, 'opt-cover-carbon')">
+                        
+                        <button class="option-item" id="opt-cover-carbon" onclick="toggleAccessory('cover', 'Carbon Fiber MagSafe', 25.00, 'opt-cover-carbon', '')">
                             <span class="option-price">$25.00</span>
-                            <span class="option-title">Fibra de Carbono Premium MagSafe</span>
-                            <span class="option-desc">Protección rígida con textura mate y anillo magnético</span>
+                            <span class="option-title">Fibra de Carbono Premium</span>
+                            <span class="option-desc">(Próximamente modelado 3D disponible)</span>
                         </button>
                     </div>
 
                     <h3 style="font-size:13px; text-transform:uppercase; color:#86868b; letter-spacing:0.5px; margin: 20px 0 10px 0;">Protector de Cámaras</h3>
                     <div class="options-list">
-                        <button class="option-item" id="opt-cam-lens" onclick="toggleAccessory('camara', 'Vidrio Templado HD para Lentes', 8.50, 'opt-cam-lens')">
+                        <button class="option-item" id="opt-cam-lens" onclick="toggleAccessory('camara', 'Vidrio Templado HD para Lentes', 8.50, 'opt-cam-lens', '')">
                             <span class="option-price">$8.50</span>
                             <span class="option-title">Protector de Cristales Individual</span>
-                            <span class="option-desc">Cápsulas de vidrio templado HD sin pérdida de enfoque</span>
-                        </button>
-                    </div>
-
-                    <h3 style="font-size:13px; text-transform:uppercase; color:#86868b; letter-spacing:0.5px; margin: 20px 0 10px 0;">Protección de Pantalla</h3>
-                    <div class="options-list">
-                        <button class="option-item" id="opt-screen-priv" onclick="toggleAccessory('pantalla', 'Cerámico Privacidad Full', 12.00, 'opt-screen-priv')">
-                            <span class="option-price">$12.00</span>
-                            <span class="option-title">Protector Cerámico Privacidad</span>
-                            <span class="option-desc">Filtro de privacidad que bloquea miradas laterales</span>
+                            <span class="option-desc">Cápsulas de vidrio templado HD</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- PASO 3: RESUMEN Y BOTÓN DE ACCIÓN COMPLETA -->
+                <!-- PASO 3: RESUMEN Y ENVIAR ORDEN -->
                 <div class="step-content" id="step-3">
                     <h2>Resumen de tu Configuración</h2>
                     <p style="font-size: 14px; color:#6e6e73; margin-bottom: 20px;">
@@ -391,10 +384,9 @@
                     </p>
                     
                     <div class="summary-box">
-                        <div class="summary-line"><span>iPhone seleccionado:</span> <span class="val" id="sum-model">iPhone 11</span></div>
+                        <div class="summary-line"><span>iPhone seleccionado:</span> <span class="val" id="sum-model">iPhone 13 Pro Max</span></div>
                         <div class="summary-line"><span>Cover:</span> <span class="val" id="sum-cover">Ninguno</span></div>
                         <div class="summary-line"><span>Protector Cámara:</span> <span class="val" id="sum-camara">Ninguno</span></div>
-                        <div class="summary-line"><span>Protector Pantalla:</span> <span class="val" id="sum-pantalla">Ninguno</span></div>
                         <div class="summary-total"><span>Total del Pedido:</span> <span id="sum-total">$0.00</span></div>
                     </div>
 
@@ -406,7 +398,7 @@
 
             </div>
 
-            <!-- Botones Inferiores de Navegación del Flujo -->
+            <!-- Botones Inferiores de Navegación -->
             <div class="footer-nav">
                 <button class="btn btn-secondary" id="btn-back" onclick="changeStep(-1)" style="display: none;">Atrás</button>
                 <button class="btn btn-primary" id="btn-next" onclick="changeStep(1)">Continuar</button>
@@ -416,74 +408,106 @@
     </div>
 
     <script>
-        // Estado inicial del configurador
         let currentStep = 1;
-        let selectedModel = "iPhone 11";
+        let selectedModel = "iPhone 13 Pro Max";
         let selection = {
             cover: { name: "Ninguno", price: 0 },
-            camara: { name: "Ninguno", price: 0 },
-            pantalla: { name: "Ninguno", price: 0 }
+            camara: { name: "Ninguno", price: 0 }
         };
 
         const viewer = document.getElementById("config-viewer");
 
-        // Lógica paso 1: Cambiar de teléfono en el motor 3D
         function selectModel(modelName, modelPath) {
             selectedModel = modelName;
             
             const items = document.querySelectorAll("#step-1 .option-item");
             items.forEach(item => item.classList.remove("selected"));
             
-            // Corregido el acceso al evento para navegadores modernos
             if (event && event.currentTarget) {
                 event.currentTarget.classList.add("selected");
             }
             
-            // Renderiza el nuevo archivo 3D de inmediato
+            // Limpiar accesorios acoplados antes de cambiar de teléfono
+            removeActiveAccessory('cover');
+            selection.cover = { name: "Ninguno", price: 0 };
+            
+            // Renderiza el nuevo iPhone
             viewer.setAttribute("src", modelPath);
+            updateSummaryData();
         }
 
-        // Lógica paso 2: Selección y toggle de accesorios comerciales
-        function toggleAccessory(type, name, price, elementId) {
+        // Modificado para recibir la URL específica del accesorio .glb
+        function toggleAccessory(type, name, price, elementId, accessoryGlbUrl) {
             const element = document.getElementById(elementId);
             
             if (selection[type].name === name) {
                 selection[type] = { name: "Ninguno", price: 0 };
                 element.classList.remove("selected");
+                removeActiveAccessory(type);
             } else {
                 const siblings = element.parentNode.querySelectorAll(".option-item");
                 siblings.forEach(s => s.classList.remove("selected"));
                 
                 selection[type] = { name: name, price: price };
                 element.classList.add("selected");
+                
+                // Si hay un archivo 3D real configurado, lo inyectamos de forma síncrona/dinámica
+                if (accessoryGlbUrl !== '') {
+                    loadAccessoryOverlay(type, accessoryGlbUrl);
+                }
             }
             
             updateSummaryData();
         }
 
-        // Lógica paso 3: Cálculo del total y estructuración del carrito
+        // LOGÍSTICA DE SUPERPOSICIÓN: Inyecta el nodo de la carcasa en la escena del iPhone
+        async function loadAccessoryOverlay(type, url) {
+            if (!viewer.model) return;
+            
+            // Limpiamos capas previas del mismo tipo
+            removeActiveAccessory(type);
+            
+            try {
+                // El visualizador crea una sub-escena directamente desde tu enlace RAW
+                const scene = await viewer.createSceneFromUrl(url);
+                scene.name = `layer-${type}`; // Marcamos el nodo como "layer-cover"
+                
+                // Se añade directamente al árbol de la escena del iPhone. 
+                // Al compartir el punto 0,0,0 de Blender, se monta exactamente en su sitio.
+                viewer.model.scene.add(scene);
+            } catch (error) {
+                console.error("Error al inyectar la carcasa 3D:", error);
+            }
+        }
+
+        // Quitar la superposición 3D
+        function removeActiveAccessory(type) {
+            if (viewer.model) {
+                const activeOverlay = viewer.model.scene.children.find(child => child.name === `layer-${type}`);
+                if (activeOverlay) {
+                    viewer.model.scene.remove(activeOverlay);
+                }
+            }
+        }
+
         function updateSummaryData() {
             document.getElementById("sum-model").innerText = selectedModel;
             document.getElementById("sum-cover").innerText = selection.cover.name + (selection.cover.price > 0 ? ` ($${selection.cover.price.toFixed(2)})` : "");
             document.getElementById("sum-camara").innerText = selection.camara.name + (selection.camara.price > 0 ? ` ($${selection.camara.price.toFixed(2)})` : "");
-            document.getElementById("sum-pantalla").innerText = selection.pantalla.name + (selection.pantalla.price > 0 ? ` ($${selection.pantalla.price.toFixed(2)})` : "");
             
-            const total = selection.cover.price + selection.camara.price + selection.pantalla.price;
+            const total = selection.cover.price + selection.camara.price;
             document.getElementById("sum-total").innerText = `$${total.toFixed(2)}`;
             
             buildWhatsAppLink(total);
         }
 
-        // Generador Automático del Mensaje Codificado para WhatsApp Comercial
         function buildWhatsAppLink(total) {
-            // Nota: Recuerda cambiar este número por tu WhatsApp real de TecnoTrade PTY
-            const phoneNumber = "50760000000"; 
+            const phoneNumber = "50760000000"; // Reemplaza con tu celular real en Panamá
             
             let message = `🔥 *¡Hola TecnoTrade PTY! Deseo realizar un pedido desde el configurador 3D:*\\n\\n`;
             message += `📱 *Modelo:* ${selectedModel}\\n`;
             message += `📦 *Cover:* ${selection.cover.name}\\n`;
-            message += `📸 *Protector Cámara:* ${selection.camara.name}\\n`;
-            message += `🛡️ *Protector Pantalla:* ${selection.pantalla.name}\\n\\n`;
+            message += `📸 *Protector Cámara:* ${selection.camara.name}\\n\\n`;
             message += `💰 *Total Estimado:* $${total.toFixed(2)}\\n\\n`;
             message += `📍 _Por favor confírmame disponibilidad para coordinar la entrega._`;
             
@@ -491,7 +515,6 @@
             document.getElementById("whatsapp-link").setAttribute("href", `https://wa.me/${phoneNumber}?text=${encodedMessage}`);
         }
 
-        // Sistema de navegación dinámica entre pestañas laterales
         function changeStep(direction) {
             currentStep += direction;
             
