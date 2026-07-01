@@ -14,7 +14,7 @@
         }
 
         body {
-            background-color: #000000; /* Fondo oscuro profundo para resaltar los colores del iPhone */
+            background-color: #0b0b0cc4; /* Fondo oscuro profundo */
             color: #ffffff;
             display: flex;
             flex-direction: column;
@@ -30,107 +30,99 @@
             position: relative;
         }
 
-        /* 1. ÁREA VISUAL PRINCIPAL (OCUPA LA MITAD SUPERIOR EN MÓVIL) */
+        /* 1. CONTENEDOR VISUAL CON EFECTO PARALLAX INMERSIVO */
         .viewer-box {
             flex: 1;
             width: 100%;
-            background: radial-gradient(circle, #1c1c1e 0%, #000000 100%);
+            background: radial-gradient(circle at center, #1c1c1e 0%, #000000 100%);
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
-            padding-bottom: 20px;
+            perspective: 1000px; /* Habilita el entorno 3D para las capas */
+            padding-bottom: 10px;
         }
 
+        /* Caja contenedora que se inclina con el movimiento */
         .canvas-container {
             position: relative;
-            width: 75%;
-            max-width: 320px;
+            width: 80%;
+            max-width: 340px;
             aspect-ratio: 1 / 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 20px;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
         }
 
+        /* Regla para todas las capas */
         .layer {
             position: absolute;
             width: 100%;
             height: 100%;
             object-fit: contain;
             pointer-events: none;
-            opacity: 0;
-            transform: scale(0.93) rotate(-2deg);
             transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-                        transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+                        transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .layer.active {
+        /* Capa base del iPhone */
+        #phone-layer {
+            z-index: 1;
+            transform: translateZ(0px); /* Plano de fondo */
+        }
+
+        /* Capa del Cover con animación de caída flotante */
+        .layer-accessory {
+            opacity: 0;
+            z-index: 2;
+            transform: translateZ(30px) scale(1.12); /* Flota ligeramente más arriba y más grande antes de entrar */
+            filter: drop-shadow(0 0px 0px rgba(0,0,0,0));
+        }
+
+        /* Cuando se activa, cae y proyecta una sombra suave sobre el chasis del iPhone */
+        .layer-accessory.active {
             opacity: 1;
-            transform: scale(1) rotate(0deg);
+            transform: translateZ(15px) scale(1);
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.55));
         }
 
-        /* SELECTOR DE PERSPECTIVA ULTRA MINIMALISTA */
-        .view-toggle-container {
-            margin-top: 25px;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 4px;
-            border-radius: 30px;
-            display: flex;
-            gap: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            z-index: 10;
-        }
-
-        .view-btn {
-            background: transparent;
-            border: none;
-            padding: 6px 16px;
-            font-size: 12px;
-            font-weight: 500;
-            color: #8e8e93;
-            cursor: pointer;
-            border-radius: 30px;
-            transition: all 0.25s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .view-btn.active {
-            background: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
+        /* Destello elegante de fondo */
+        .glow-effect {
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 0;
+            transition: background 0.5s ease;
         }
 
 
-        /* 2. PANEL DE CONFIGURACIÓN INFERIOR (ESTILO BOTTOM SHEET) */
+        /* 2. PANEL DE SELECCIÓN INFERIOR (BOTTOM SHEET) */
         .control-panel {
-            background: rgba(28, 28, 30, 0.85);
+            background: rgba(20, 20, 22, 0.75);
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px 24px 0 0;
-            padding: 24px 24px 100px 24px; /* Espacio extra abajo para los botones flotantes */
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px 28px 0 0;
+            padding: 24px 24px 100px 24px;
             display: flex;
             flex-direction: column;
-            height: 45vh; /* Se expande en la mitad inferior de la pantalla */
+            height: 48vh;
             z-index: 20;
-        }
-
-        .header {
-            margin-bottom: 20px;
-            text-align: center;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
         }
 
         .header h1 {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
             letter-spacing: -0.3px;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        /* Indicador de Línea de Progreso Minimalista */
         .steps-indicator {
             display: flex;
             justify-content: center;
@@ -147,13 +139,11 @@
         }
 
         .step-dot.active {
-            width: 18px;
+            width: 20px;
             background: #0071e3;
             border-radius: 3px;
         }
 
-
-        /* CONTENEDOR DESLIZABLE DE CONTENIDO */
         .steps-container {
             flex: 1;
             overflow-y: auto;
@@ -165,27 +155,28 @@
 
         .step-content.active {
             display: block;
-            animation: fadeInUp 0.4s ease;
+            animation: fadeIn 0.4s ease forwards;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         h2 {
-            font-size: 16px;
-            font-weight: 500;
-            color: #aeae2;
-            margin-bottom: 15px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             color: #8e8e93;
+            margin-bottom: 15px;
         }
 
-        /* GRID DE BOTONES PREMIUM */
+        /* GRID DE BOTONES ESTILO APPLE STORE */
         .options-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .option-item {
@@ -193,55 +184,54 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.04);
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 14px;
+            border-radius: 16px;
             cursor: pointer;
-            text-align: left;
-            transition: all 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             color: #ffffff;
         }
 
-        .option-item:active {
-            transform: scale(0.98);
+        .option-item:hover {
+            background: rgba(255, 255, 255, 0.06);
         }
 
         .option-item.selected {
             border-color: #0071e3;
-            background: rgba(0, 113, 227, 0.15);
+            background: rgba(0, 113, 227, 0.12);
+            box-shadow: 0 0 15px rgba(0, 113, 227, 0.1);
         }
 
         .option-title {
             font-weight: 500;
-            font-size: 14px;
-            display: block;
+            font-size: 15px;
         }
 
         .option-desc {
-            font-size: 11px;
+            font-size: 12px;
             color: #8e8e93;
-            margin-top: 2px;
+            margin-top: 3px;
             display: block;
         }
 
         .option-price {
             font-weight: 600;
             color: #0071e3;
-            font-size: 14px;
+            font-size: 15px;
         }
 
-        /* CAJA DE RESUMEN FINAL */
+        /* RESUMEN DE COMPRA */
         .summary-box {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 14px;
-            padding: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .summary-line {
-            font-size: 13px;
-            margin-bottom: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             color: #8e8e93;
@@ -253,36 +243,35 @@
         }
 
         .summary-total {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 12px;
-            margin-top: 12px;
-            font-size: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 14px;
+            margin-top: 14px;
+            font-size: 17px;
             font-weight: 600;
             display: flex;
             justify-content: space-between;
-            color: #ffffff;
         }
 
-        /* 3. BARRA DE NAVEGACIÓN FLOTANTE FIJA */
+        /* 3. SISTEMA DE NAVEGACIÓN INFERIOR */
         .footer-nav {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            padding: 16px 24px 30px 24px;
-            background: linear-gradient(to top, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+            padding: 16px 24px 32px 24px;
+            background: linear-gradient(to top, #0b0b0c 70%, rgba(11, 11, 12, 0) 100%);
             display: flex;
             justify-content: space-between;
-            gap: 12px;
+            gap: 14px;
             z-index: 30;
         }
 
         .btn {
             flex: 1;
-            padding: 14px;
-            font-size: 14px;
+            padding: 16px;
+            font-size: 15px;
             font-weight: 600;
-            border-radius: 14px;
+            border-radius: 16px;
             cursor: pointer;
             border: none;
             text-align: center;
@@ -291,46 +280,45 @@
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.07);
             color: #ffffff;
         }
+
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.12); }
 
         .btn-primary {
             background: #0071e3;
             color: #ffffff;
         }
 
+        .btn-primary:hover { background: #147ce5; }
+
         .btn-whatsapp {
             background: #25D366;
             color: white;
-            box-shadow: 0 4px 15px rgba(37,211,102,0.2);
+            box-shadow: 0 6px 20px rgba(37,211,102,0.25);
         }
+        .btn-whatsapp:hover { background: #21be5b; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         
-        <!-- MITAD SUPERIOR: VISOR DE CAPAS DE IMAGEN CON GIRO -->
-        <div class="viewer-box">
-            <div class="canvas-container">
-                <!-- Chasis Base del Teléfono -->
-                <img id="img-base-frente" class="layer active" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/38e20d00fb4073309629e9f49b1216fd4db3527e/13promaxfrente.jpg">
-                <img id="img-base-lado" class="layer" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/38e20d00fb4073309629e9f49b1216fd4db3527e/13promaxlado.jpg">
+        <!-- MITAD SUPERIOR: CANVAS DE CAPAS SUPERPUESTAS (CON PARALLAX) -->
+        <div class="viewer-box" id="tilt-zone">
+            <div class="glow-effect" id="bg-glow"></div>
+            
+            <div class="canvas-container" id="canvas-card">
+                <!-- Capa Fija del iPhone Base -->
+                <img id="phone-layer" class="layer" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/19bf28d20c063138f94624be48a8e9a4847b9ad4/13pm.png" alt="iPhone 13 Pro Max">
                 
-                <!-- Covers Integrados "Vestidos" -->
-                <img id="img-cover-frente" class="layer" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/38e20d00fb4073309629e9f49b1216fd4db3527e/covercelestefrente13.jpg">
-                <img id="img-cover-lado" class="layer" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/a04815d16c2c1aa8f27692027f140ae00f4c1e15/cover13pmcelestelado.jpg">
-            </div>
-
-            <!-- Controlador Estético de Perspectiva -->
-            <div class="view-toggle-container">
-                <button id="btn-view-frente" class="view-btn active" onclick="switchPerspective('frente')">Frente</button>
-                <button id="btn-view-lado" class="view-btn" onclick="switchPerspective('lado')">Perfil</button>
+                <!-- Capa Volante Dinámica del Cover -->
+                <img id="cover-layer" class="layer layer-accessory" src="" alt="Cover Protector">
             </div>
         </div>
 
-        <!-- MITAD INFERIOR: MENU DESLIZABLE (ESTILO APPLE) -->
+        <!-- MITAD INFERIOR: MENÚ BOTTOM SHEET DESLIZABLE -->
         <div class="control-panel">
             <div class="header">
                 <h1>TecnoTrade PTY</h1>
@@ -344,50 +332,71 @@
 
             <div class="steps-container">
                 
-                <!-- PASO 1: MODELO DE DISPOSITIVO -->
+                <!-- PASO 1: MODELO -->
                 <div class="step-content active" id="step-1">
-                    <h2>1. Selecciona tu iPhone</h2>
+                    <h2>1. Selecciona tu Dispositivo</h2>
                     <div class="options-list">
-                        <button class="option-item selected" onclick="selectModel('iPhone 13 Pro Max')">
+                        <button class="option-item selected" onclick="selectModel('iPhone 13 Pro Max', '#0071e3')">
                             <div>
                                 <span class="option-title">iPhone 13 Pro Max</span>
-                                <span class="option-desc">Chasis premium con módulo de tres cámaras</span>
+                                <span class="option-desc">Acabado cristal e iluminación de contraste</span>
                             </div>
                         </button>
                     </div>
                 </div>
 
-                <!-- PASO 2: SELECCIÓN DE COVERS -->
+                <!-- PASO 2: ACCESORIOS (Aquí colocas tus nuevos links PNG transparentes sueltos) -->
                 <div class="step-content" id="step-2">
-                    <h2>2. Elige un Cover Protector</h2>
+                    <h2>2. Elige el Cover de tu Preferencia</h2>
                     <div class="options-list">
-                        <button class="option-item" id="btn-case-celeste" onclick="toggleCover('Cover Silicone Celeste', 15.00, 'btn-case-celeste')">
+                        
+                        <!-- Cover Elegante -->
+                        <button class="option-item" id="btn-elegant" onclick="toggleCover('Cover Elegante Premium', 18.00, 'btn-elegant', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/19bf28d20c063138f94624be48a8e9a4847b9ad4/cover13pm1.png', '#e0a96d')">
                             <div>
-                                <span class="option-title">Silicona Azul Celeste</span>
-                                <span class="option-desc">Mantiene el acabado crystal original del chasis</span>
+                                <span class="option-title">Cover Elegante Premium</span>
+                                <span class="option-desc">Diseño exclusivo con textura reforzada</span>
+                            </div>
+                            <span class="option-price">$18.00</span>
+                        </button>
+
+                        <!-- Cover Silicona Soporte -->
+                        <button class="option-item" id="btn-support" onclick="toggleCover('Silicona con Soporte', 15.00, 'btn-support', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/19bf28d20c063138f94624be48a8e9a4847b9ad4/cover13pm2.png', '#2c3e50')">
+                            <div>
+                                <span class="option-title">Silicona con Soporte Integrado</span>
+                                <span class="option-desc">Anillo desplegable funcional y antideslizante</span>
                             </div>
                             <span class="option-price">$15.00</span>
                         </button>
+
+                        <!-- Cover Silicona Básico -->
+                        <button class="option-item" id="btn-basic" onclick="toggleCover('Silicona Básica Slim', 10.00, 'btn-basic', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/19bf28d20c063138f94624be48a8e9a4847b9ad4/cover13pm3.png', '#34495e')">
+                            <div>
+                                <span class="option-title">Silicona Básica Slim</span>
+                                <span class="option-desc">Carcasa clásica suave de perfil ultradelgado</span>
+                            </div>
+                            <span class="option-price">$10.00</span>
+                        </button>
+
                     </div>
                 </div>
 
-                <!-- PASO 3: RESUMEN Y ENVÍO -->
+                <!-- PASO 3: RESUMEN -->
                 <div class="step-content" id="step-3">
-                    <h2>3. Revisa tu pedido</h2>
+                    <h2>3. Revisa y Confirma tu Orden</h2>
                     <div class="summary-box">
                         <div class="summary-line"><span>iPhone:</span> <span class="val" id="sum-model">iPhone 13 Pro Max</span></div>
-                        <div class="summary-line"><span>Cover:</span> <span class="val" id="sum-cover">Ninguno</span></div>
+                        <div class="summary-line"><span>Accesorio:</span> <span class="val" id="sum-cover">Ninguno</span></div>
                         <div class="summary-total"><span>Total estimado:</span> <span id="sum-total">$0.00</span></div>
                     </div>
                 </div>
 
             </div>
 
-            <!-- NAVEGACIÓN FLOTANTE FIJA INFERIOR -->
+            <!-- BOTONES NAVEGACIÓN FLOTANTE -->
             <div class="footer-nav">
                 <button class="btn btn-secondary" id="btn-back" onclick="changeStep(-1)" style="visibility: hidden;">Atrás</button>
                 <button class="btn btn-primary" id="btn-next" onclick="changeStep(1)">Continuar</button>
-                <a href="#" id="whatsapp-link" target="_blank" class="btn btn-whatsapp" style="display: none;">Enviar Orden</a>
+                <a href="#" id="whatsapp-link" target="_blank" class="btn btn-primary btn-whatsapp" style="display: none;">Enviar Orden</a>
             </div>
 
         </div>
@@ -396,59 +405,86 @@
     <script>
         let currentStep = 1;
         let selectedModel = "iPhone 13 Pro Max";
-        let currentPerspective = "frente"; 
-        let isCoverSelected = false;
         let selection = { cover: { name: "Ninguno", price: 0 } };
 
-        // INTERACTIVIDAD MULTIPLANO (GIRO)
-        function switchPerspective(side) {
-            currentPerspective = side;
+        const coverLayer = document.getElementById("cover-layer");
+        const bgGlow = document.getElementById("bg-glow");
+        const tiltCard = document.getElementById("canvas-card");
+        const tiltZone = document.getElementById("tilt-zone");
+
+        // 1. EFECTO PARALLAX INTERACTIVO (FALSO 3D AL MOVER MOUSE O TOCAR)
+        function handleTilt(x, y) {
+            const width = tiltZone.offsetWidth;
+            const height = tiltZone.offsetHeight;
             
-            document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
-            document.getElementById(`btn-view-${side}`).classList.add("active");
-
-            document.querySelectorAll(".layer").forEach(img => img.classList.remove("active"));
-
-            if (!isCoverSelected) {
-                document.getElementById(`img-base-${side}`).classList.add("active");
-            } else {
-                document.getElementById(`img-cover-${side}`).classList.add("active");
-            }
+            // Calculamos el ángulo basado en el centro de la pantalla
+            const rotateX = -((y - height / 2) / height) * 24; // Ángulo de inclinación vertical
+            const rotateY = ((x - width / 2) / width) * 24;   // Ángulo de inclinación horizontal
+            
+            tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         }
 
-        // SELECCIÓN DEL COVER
-        function toggleCover(name, price, elementId) {
+        // Evento para computadoras (Mouse)
+        tiltZone.addEventListener("mousemove", (e) => {
+            handleTilt(e.clientX, e.clientY);
+        });
+
+        // Evento para celulares (Dedo/Touch)
+        tiltZone.addEventListener("touchmove", (e) => {
+            if (e.touches.length > 0) {
+                const touch = e.touches[0];
+                handleTilt(touch.clientX, touch.clientY);
+            }
+        });
+
+        // Restablecer posición suave cuando quitan el dedo o mouse
+        function resetTilt() {
+            tiltCard.style.transform = "rotateX(0deg) rotateY(0deg)";
+        }
+        tiltZone.addEventListener("mouseleave", resetTilt);
+        tiltZone.addEventListener("touchend", resetTilt);
+
+
+        // 2. LOGÍSTICA DE CAPAS DE ACCESORIOS SÚPER INMERSIVAS
+        function toggleCover(name, price, elementId, imgUrl, accentColor) {
             const element = document.getElementById(elementId);
             
             if (selection.cover.name === name) {
+                // Si ya está puesto, lo quitamos con animación de salida
                 selection.cover = { name: "Ninguno", price: 0 };
                 element.classList.remove("selected");
-                isCoverSelected = false;
+                
+                coverLayer.classList.remove("active");
+                bgGlow.style.background = "radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, rgba(0,0,0,0) 70%)";
             } else {
+                // Quitamos selecciones previas
+                document.querySelectorAll("#step-2 .option-item").forEach(el => el.classList.remove("selected"));
+                
                 selection.cover = { name: name, price: price };
                 element.classList.add("selected");
-                isCoverSelected = true;
+                
+                // Cambia la foto del cover suelto en la capa superior y activa la animación de caída
+                coverLayer.setAttribute("src", imgUrl);
+                coverLayer.classList.add("active");
+                
+                // Cambia dinámicamente el resplandor de fondo según el color del cover elegido
+                bgGlow.style.background = `radial-gradient(circle, ${accentColor}33 0%, rgba(0,0,0,0) 70%)`;
             }
-
-            switchPerspective(currentPerspective);
+            
             updateSummaryData();
         }
 
-        function selectModel(modelName) {
+        function selectModel(modelName, accentColor) {
             selectedModel = modelName;
             updateSummaryData();
         }
 
-        // SOLUCIÓN AL PROBLEMA DEL BOTÓN ATRÁS (LIMPIEZA AUTOMÁTICA)
-        function resetAccessoriesAndVisuals() {
-            isCoverSelected = false;
+        // ARREGLO BOTÓN ATRÁS: Desmonta el accesorio inmediatamente
+        function cleanVisualsOnBack() {
             selection.cover = { name: "Ninguno", price: 0 };
-            
-            // Quitar clase "selected" de los botones del menú
             document.querySelectorAll("#step-2 .option-item").forEach(el => el.classList.remove("selected"));
-            
-            // Forzar al visualizador a regresar a las fotos del teléfono base limpio
-            switchPerspective(currentPerspective);
+            coverLayer.classList.remove("active");
+            bgGlow.style.background = "radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, rgba(0,0,0,0) 70%)";
             updateSummaryData();
         }
 
@@ -466,18 +502,17 @@
             let message = `🔥 *¡Hola TecnoTrade PTY! Deseo realizar un pedido:*\\n\\n`;
             message += `📱 *Modelo:* ${selectedModel}\\n`;
             message += `📦 *Cover:* ${selection.cover.name}\\n\\n`;
-            message += `💰 *Total:* $${total.toFixed(2)}\\n\\n`;
+            message += `💰 *Total del Pedido:* $${total.toFixed(2)}\\n\\n`;
             message += `📍 _Por favor confírmame disponibilidad para coordinar la entrega._`;
             
             const encodedMessage = encodeURIComponent(message);
             document.getElementById("whatsapp-link").setAttribute("href", `https://wa.me/${phoneNumber}?text=${encodedMessage}`);
         }
 
-        // CONTROL DE PASOS DINÁMICO REPARADO
         function changeStep(direction) {
-            // Logística correctora: Si el usuario va hacia atrás desde el paso 2 al 1, limpiamos el accesorio puesto
+            // Si el usuario va hacia atrás desde el paso 2 al paso 1, desmontamos los accesorios puestos
             if (currentStep === 2 && direction === -1) {
-                resetAccessoriesAndVisuals();
+                cleanVisualsOnBack();
             }
 
             currentStep += direction;
@@ -492,7 +527,6 @@
                 document.getElementById(`dot-${i}`).classList.add("active");
             }
             
-            // Control de visibilidad de botones usando propiedades de estilo limpias
             document.getElementById("btn-back").style.visibility = (currentStep === 1) ? "hidden" : "visible";
             
             if (currentStep === 3) {
