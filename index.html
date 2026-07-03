@@ -3,539 +3,474 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurador Premium - TecnoTrade PTY</title>
+    <title>DropShare - Transferencia Directa P2P</title>
+    
+    <!-- FUENTE MODERNA -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- PEERJS PARA CONEXIÓN AUTOMÁTICA -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+    <!-- SCRIPT 1 DE ADSTERRA (FONDO) -->
+    <script src="https://pl30194022.effectivecpmnetwork.com/2f/e1/39/2fe13967078f96a4a1cf3574aba92437.js"></script>
+
+    <!-- ICONO NATIVO PARA PANTALLA DE INICIO (IPHONE Y ANDROID) -->
+    <!-- Creamos un icono SVG en base64 integrado directamente para que no necesites subir imágenes extra -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMwYjBmMTkiLz4KICA8Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjIzMCIgZmlsbD0iIzE1MWQzMCIgc3Ryb2tlPSIjMDA3MGYzIiBzdHJva2Utd2lkdGg9IjgiLz4KICA8cGF0aCBkPSJNMjU2IDgwdjI0MG0tODAgODBMMjU2IDQwMGw4MC04MCIgc3Ryb2tlPSIjMDBkZmQ4IiBzdHJva2Utd2lkdGg9IjMyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMjU2IDMwdjMwbTEwMCAxMGwtMjAgMjBtLTE2MCAw bDIwIDIwTTMwIDI1NmgyM200MDYgMGgyM004OCAzOTRsMjAgMjBtMjk2IDBsLTIwIDIwIiBzdHJva2U9IiMwMDcwZjMiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg==">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CiAgPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMwYjBmMTkiLz4KICA8Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjIzMCIgZmlsbD0iIzE1MWQzMCIgc3Ryb2tlPSIjMDA3MGYzIiBzdHJva2Utd2lkdGg9IjgiLz4KICA8cGF0aCBkPSJNMjU2IDgwdjI0MG0tODAgODBMMjU2IDQwMGw4MC04MCIgc3Ryb2tlPSIjMDBkZmQ4IiBzdHJva2Utd2lkdGg9IjMyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8cGF0aCBkPSJNMjU2IDMwdjMwbTEwMCAxMGwtMjAgMjBtLTE2MCAw bDIwIDIwTTMwIDI1NmgyM200MDYgMGgyM004OCAzOTRsMjAgMjBtMjk2IDBsLTIwIDIwIiBzdHJva2U9IiMwMDcwZjMiIHN0cm9rZS13aWR0aD0iOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPg==">
+
     <style>
+        :root {
+            --bg-principal: #0b0f19;
+            --bg-tarjeta: #151d30;
+            --azul-electrico: #0070f3;
+            --azul-hover: #0051b3;
+            --verde-exito: #00e676;
+            --naranja-alerta: #ff9100;
+            --texto-blanco: #ffffff;
+            --texto-secundario: #94a3b8;
+            --borde: #233554;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
-            background-color: #0b0b0cc4; /* Fondo oscuro profundo */
-            color: #ffffff;
+            background-color: var(--bg-principal);
+            color: var(--texto-blanco);
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .app-container {
-            display: flex;
-            flex-direction: column;
             width: 100%;
-            height: 100vh;
-            position: relative;
+            max-width: 480px;
+            background-color: var(--bg-tarjeta);
+            border: 1px solid var(--borde);
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
         }
 
-        /* 1. CONTENEDOR VISUAL CON EFECTO PARALLAX INMERSIVO */
-        .viewer-box {
-            flex: 1;
-            width: 100%;
-            background: radial-gradient(circle at center, #1c1c1e 0%, #000000 100%);
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px; /* Habilita el entorno 3D para las capas */
-            padding-bottom: 10px;
-        }
-
-        /* Caja contenedora que se inclina con el movimiento */
-        .canvas-container {
-            position: relative;
-            width: 80%;
-            max-width: 340px;
-            aspect-ratio: 1 / 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-        }
-
-        /* Regla para todas las capas */
-        .layer {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            pointer-events: none;
-            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-                        transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        /* Capa base del iPhone */
-        #phone-layer {
-            z-index: 1;
-            transform: translateZ(0px); /* Plano de fondo */
-        }
-
-        /* Capa del Cover con animación de caída flotante */
-        .layer-accessory {
-            opacity: 0;
-            z-index: 2;
-            transform: translateZ(30px) scale(1.12); /* Flota ligeramente más arriba y más grande antes de entrar */
-            filter: drop-shadow(0 0px 0px rgba(0,0,0,0));
-        }
-
-        /* Cuando se activa, cae y proyecta una sombra suave sobre el chasis del iPhone */
-        .layer-accessory.active {
-            opacity: 1;
-            transform: translateZ(15px) scale(1);
-            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.55));
-        }
-
-        /* Destello elegante de fondo */
-        .glow-effect {
-            position: absolute;
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, rgba(0,0,0,0) 70%);
-            pointer-events: none;
-            z-index: 0;
-            transition: background 0.5s ease;
-        }
-
-
-        /* 2. PANEL DE SELECCIÓN INFERIOR (BOTTOM SHEET) */
-        .control-panel {
-            background: rgba(20, 20, 22, 0.75);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 28px 28px 0 0;
-            padding: 24px 24px 100px 24px;
-            display: flex;
-            flex-direction: column;
-            height: 48vh;
-            z-index: 20;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .header h1 {
-            font-size: 22px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+            background: linear-gradient(45deg, #0070f3, #00dfd8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: var(--texto-secundario);
+        }
+
+        .id-section {
+            background: rgba(0, 112, 243, 0.08);
+            border: 1px solid rgba(0, 112, 243, 0.25);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .id-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--texto-secundario);
+            margin-bottom: 4px;
             font-weight: 600;
-            letter-spacing: -0.3px;
+        }
+
+        .id-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--texto-blanco);
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .connect-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modern-input {
+            flex: 1;
+            background: #090d16;
+            border: 1px solid var(--borde);
+            border-radius: 14px;
+            color: #fff;
+            padding: 12px 14px;
+            font-size: 14px;
+            outline: none;
+        }
+        .modern-input:focus {
+            border-color: var(--azul-electrico);
+        }
+
+        .modern-button {
+            background: var(--azul-electrico);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            padding: 12px 18px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modern-button:hover { background: var(--azul-hover); }
+
+        .radar-zone {
+            background: #090d16;
+            border: 1px solid var(--borde);
+            border-radius: 20px;
+            padding: 25px 15px;
             text-align: center;
             margin-bottom: 20px;
-        }
-
-        .steps-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            margin-bottom: 20px;
-        }
-
-        .step-dot {
-            width: 6px;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .step-dot.active {
-            width: 20px;
-            background: #0071e3;
-            border-radius: 3px;
-        }
-
-        .steps-container {
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .step-content {
-            display: none;
-        }
-
-        .step-content.active {
-            display: block;
-            animation: fadeIn 0.4s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2 {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #8e8e93;
-            margin-bottom: 15px;
-        }
-
-        /* GRID DE BOTONES ESTILO APPLE STORE */
-        .options-list {
+            min-height: 130px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-        }
-
-        .option-item {
-            display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+        }
+
+        .radar-avatar {
+            width: 45px;
+            height: 45px;
+            background: rgba(0, 112, 243, 0.15);
+            border: 2px solid var(--azul-electrico);
+            border-radius: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 112, 243, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(0, 112, 243, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 112, 243, 0); }
+        }
+
+        .radar-status-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .radar-status-sub { font-size: 12px; color: var(--texto-secundario); line-height: 1.4; }
+
+        /* BANNER DE AUTOPUBLICIDAD LOCAL */
+        .local-ad-banner {
             width: 100%;
-            padding: 18px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+            border: 1px solid #374151;
             border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            color: #ffffff;
-        }
-
-        .option-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .option-item.selected {
-            border-color: #0071e3;
-            background: rgba(0, 113, 227, 0.12);
-            box-shadow: 0 0 15px rgba(0, 113, 227, 0.1);
-        }
-
-        .option-title {
-            font-weight: 500;
-            font-size: 15px;
-        }
-
-        .option-desc {
-            font-size: 12px;
-            color: #8e8e93;
-            margin-top: 3px;
-            display: block;
-        }
-
-        .option-price {
-            font-weight: 600;
-            color: #0071e3;
-            font-size: 15px;
-        }
-
-        /* RESUMEN DE COMPRA */
-        .summary-box {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 16px;
-            padding: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .summary-line {
-            font-size: 14px;
-            margin-bottom: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
             display: flex;
-            justify-content: space-between;
-            color: #8e8e93;
-        }
-
-        .summary-line span.val {
-            color: #ffffff;
-            font-weight: 500;
-        }
-
-        .summary-total {
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            padding-top: 14px;
-            margin-top: 14px;
-            font-size: 17px;
-            font-weight: 600;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* 3. SISTEMA DE NAVEGACIÓN INFERIOR */
-        .footer-nav {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 16px 24px 32px 24px;
-            background: linear-gradient(to top, #0b0b0c 70%, rgba(11, 11, 12, 0) 100%);
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            z-index: 30;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 16px;
-            font-size: 15px;
-            font-weight: 600;
-            border-radius: 16px;
-            cursor: pointer;
-            border: none;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            transition: all 0.2s ease;
             text-decoration: none;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .local-ad-banner:hover {
+            transform: translateY(-2px);
+            border-color: var(--azul-electrico);
+        }
+        .local-ad-text {
+            font-size: 12px;
+            color: var(--texto-blanco);
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        .local-ad-button {
+            background: #22c55e;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.07);
-            color: #ffffff;
+        .transfer-panel { display: none; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .file-label {
+            background: linear-gradient(135deg, #233554 0%, #151d30 100%);
+            border: 2px dashed var(--borde);
+            border-radius: 16px;
+            padding: 25px 15px;
+            display: block;
+            cursor: pointer;
+            text-align: center;
         }
+        .file-label:hover { border-color: var(--azul-electrico); background: rgba(0, 112, 243, 0.03); }
+        .file-icon { font-size: 28px; margin-bottom: 8px; }
+        .file-text { font-size: 13px; font-weight: 500; }
+        #file-input { display: none; }
 
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.12); }
+        .progress-container { margin-top: 15px; }
+        .progress-bar-bg { background: #090d16; height: 6px; border-radius: 3px; width: 100%; margin-top: 6px; overflow: hidden; }
+        .progress-bar-fill { background: var(--azul-electrico); height: 100%; width: 0%; transition: width 0.1s ease; }
 
-        .btn-primary {
-            background: #0071e3;
-            color: #ffffff;
+        /* CONTENEDOR ANUNCIO ADSTERRA INFERIOR */
+        .ad-wrapper {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            background: var(--bg-tarjeta);
+            border: 1px solid var(--borde);
+            border-radius: 16px;
         }
-
-        .btn-primary:hover { background: #147ce5; }
-
-        .btn-whatsapp {
-            background: #25D366;
-            color: white;
-            box-shadow: 0 6px 20px rgba(37,211,102,0.25);
-        }
-        .btn-whatsapp:hover { background: #21be5b; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        
-        <!-- MITAD SUPERIOR: CANVAS DE CAPAS SUPERPUESTAS (CON PARALLAX) -->
-        <div class="viewer-box" id="tilt-zone">
-            <div class="glow-effect" id="bg-glow"></div>
-            
-            <div class="canvas-container" id="canvas-card">
-                <!-- Capa Fija del iPhone Base -->
-                <img id="phone-layer" class="layer" src="https://raw.githubusercontent.com/joeldiaz171053-maker/krea/19bf28d20c063138f94624be48a8e9a4847b9ad4/13pm.png" alt="iPhone 13 Pro Max">
-                
-                <!-- Capa Volante Dinámica del Cover -->
-                <img id="cover-layer" class="layer layer-accessory" src="" alt="Cover Protector">
-            </div>
+        <div class="header">
+            <h1>DropShare</h1>
+            <p>Compartir archivos P2P en alta calidad</p>
         </div>
 
-        <!-- MITAD INFERIOR: MENÚ BOTTOM SHEET DESLIZABLE -->
-        <div class="control-panel">
-            <div class="header">
-                <h1>TecnoTrade PTY</h1>
-            </div>
+        <div class="id-section">
+            <div class="id-label">Tu ID de conexión</div>
+            <div class="id-value" id="my-peer-id" onclick="copiarMiID()">Cargando...</div>
+        </div>
 
-            <div class="steps-indicator">
-                <span class="step-dot active" id="dot-1"></span>
-                <span class="step-dot" id="dot-2"></span>
-                <span class="step-dot" id="dot-3"></span>
-            </div>
+        <div class="connect-box">
+            <input type="text" id="peer-id-input" class="modern-input" placeholder="Introduce el ID de destino...">
+            <button class="modern-button" onclick="conectarConAmigo()">Conectar</button>
+        </div>
 
-            <div class="steps-container">
-                
-                <!-- PASO 1: MODELO -->
-                <div class="step-content active" id="step-1">
-                    <h2>1. Selecciona tu Dispositivo</h2>
-                    <div class="options-list">
-                        <button class="option-item selected" onclick="selectModel('iPhone 13 Pro Max', '#0071e3')">
-                            <div>
-                                <span class="option-title">iPhone 13 Pro Max</span>
-                                <span class="option-desc">Acabado cristal e iluminación de contraste</span>
-                            </div>
-                        </button>
-                    </div>
+        <!-- Radar de Conexión -->
+        <div class="radar-zone" id="radar-container">
+            <div class="radar-avatar" id="radar-icon">📡</div>
+            <div class="radar-status-title" id="radar-title">Esperando Dispositivos</div>
+            <div class="radar-status-sub" id="radar-sub">Introduce un ID arriba para sincronizar el canal directo.</div>
+        </div>
+
+        <!-- BANNER DE AUTOPUBLICIDAD DE TU NEGOCIO LOCAL -->
+        <!-- REEMPLAZA "https://instagram.com/tu_usuario" POR TU ENLACE REAL DE NEGOCIOS -->
+        <a href="https://www.instagram.com/tecnotradepty/" target="_blank" class="local-ad-banner">
+            <div class="local-ad-text">
+                🛠️ ¿Pantalla rota o problemas con tu móvil?<br>
+                <strong>Repara, compra o vende teléfonos con los expertos.</strong>
+            </div>
+            <div class="local-ad-button">Escríbenos al Instagram</div>
+        </a>
+
+        <!-- Panel de Transferencia -->
+        <div class="transfer-panel" id="transfer-zone">
+            <label for="file-input" class="file-label">
+                <div class="file-icon">📁</div>
+                <div class="file-text">Toca aquí para enviar fotos o videos</div>
+            </label>
+            <input type="file" id="file-input">
+            
+            <div class="progress-container">
+                <div class="radar-status-sub" id="status-text">Conectado. Elige un archivo.</div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progress-bar"></div>
                 </div>
-
-                <!-- PASO 2: ACCESORIOS (Aquí colocas tus nuevos links PNG transparentes sueltos) -->
-                <div class="step-content" id="step-2">
-                    <h2>2. Elige el Cover de tu Preferencia</h2>
-                    <div class="options-list">
-                        
-                        <!-- Cover Elegante -->
-                        <button class="option-item" id="btn-elegant" onclick="toggleCover('Cover Elegante Premium', 18.00, 'btn-elegant', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/19bf28d20c063138f94624be48a8e9a4847b9ad4/cover13pm1.png', '#e0a96d')">
-                            <div>
-                                <span class="option-title">Cover Elegante Premium</span>
-                                <span class="option-desc">Diseño exclusivo con textura reforzada</span>
-                            </div>
-                            <span class="option-price">$18.00</span>
-                        </button>
-
-                        <!-- Cover Silicona Soporte -->
-                        <button class="option-item" id="btn-support" onclick="toggleCover('Silicona con Soporte', 15.00, 'btn-support', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/19bf28d20c063138f94624be48a8e9a4847b9ad4/cover13pm2.png', '#2c3e50')">
-                            <div>
-                                <span class="option-title">Silicona con Soporte Integrado</span>
-                                <span class="option-desc">Anillo desplegable funcional y antideslizante</span>
-                            </div>
-                            <span class="option-price">$15.00</span>
-                        </button>
-
-                        <!-- Cover Silicona Básico -->
-                        <button class="option-item" id="btn-basic" onclick="toggleCover('Silicona Básica Slim', 10.00, 'btn-basic', 'https://raw.githubusercontent.com/joeldiaz171053-maker/krea/19bf28d20c063138f94624be48a8e9a4847b9ad4/cover13pm3.png', '#34495e')">
-                            <div>
-                                <span class="option-title">Silicona Básica Slim</span>
-                                <span class="option-desc">Carcasa clásica suave de perfil ultradelgado</span>
-                            </div>
-                            <span class="option-price">$10.00</span>
-                        </button>
-
-                    </div>
-                </div>
-
-                <!-- PASO 3: RESUMEN -->
-                <div class="step-content" id="step-3">
-                    <h2>3. Revisa y Confirma tu Orden</h2>
-                    <div class="summary-box">
-                        <div class="summary-line"><span>iPhone:</span> <span class="val" id="sum-model">iPhone 13 Pro Max</span></div>
-                        <div class="summary-line"><span>Accesorio:</span> <span class="val" id="sum-cover">Ninguno</span></div>
-                        <div class="summary-total"><span>Total estimado:</span> <span id="sum-total">$0.00</span></div>
-                    </div>
-                </div>
-
             </div>
-
-            <!-- BOTONES NAVEGACIÓN FLOTANTE -->
-            <div class="footer-nav">
-                <button class="btn btn-secondary" id="btn-back" onclick="changeStep(-1)" style="visibility: hidden;">Atrás</button>
-                <button class="btn btn-primary" id="btn-next" onclick="changeStep(1)">Continuar</button>
-                <a href="#" id="whatsapp-link" target="_blank" class="btn btn-primary btn-whatsapp" style="display: none;">Enviar Orden</a>
-            </div>
-
         </div>
     </div>
 
+    <!-- CONTENEDOR INTEGRADO CON SCRIPT 2 DE ADSTERRA -->
+    <div class="ad-wrapper">
+        <script async="async" data-cfasync="false" src="https://pl30194023.effectivecpmnetwork.com/c8ac56722540aa17fffaa64614d3e334/invoke.js"></script>
+        <div id="container-c8ac56722540aa17fffaa64614d3e334"></div>
+    </div>
+
+    <!-- SCRIPT 3 DE ADSTERRA (FONDO) -->
+    <script src="https://pl30194024.effectivecpmnetwork.com/dd/ff/7b/ddff7b71c6d6c882187f927250f8c45e.js"></script>
+
+    <!-- LÓGICA LOGÍSTICA DE TRANSFERENCIA ESTABLE -->
     <script>
-        let currentStep = 1;
-        let selectedModel = "iPhone 13 Pro Max";
-        let selection = { cover: { name: "Ninguno", price: 0 } };
+        let peer = null;
+        let conn = null;
+        
+        const CHUNK_SIZE = 65536; 
+        let fileReader = new FileReader();
+        let currentOffset = 0;
+        let currentFile = null;
 
-        const coverLayer = document.getElementById("cover-layer");
-        const bgGlow = document.getElementById("bg-glow");
-        const tiltCard = document.getElementById("canvas-card");
-        const tiltZone = document.getElementById("tilt-zone");
+        // ENLACE DIRECT LINK DE ADSTERRA
+        const ADSTERRA_DIRECT_LINK = "https://www.effectivecpmnetwork.com/xd6fj1pdek?key=3f7331deb0a0da8bbb8b01a1738a75b9";
 
-        // 1. EFECTO PARALLAX INTERACTIVO (FALSO 3D AL MOVER MOUSE O TOCAR)
-        function handleTilt(x, y) {
-            const width = tiltZone.offsetWidth;
-            const height = tiltZone.offsetHeight;
-            
-            // Calculamos el ángulo basado en el centro de la pantalla
-            const rotateX = -((y - height / 2) / height) * 24; // Ángulo de inclinación vertical
-            const rotateY = ((x - width / 2) / width) * 24;   // Ángulo de inclinación horizontal
-            
-            tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        }
+        const randomId = 'DROP-' + Math.floor(1000 + Math.random() * 9000);
+        peer = new Peer(randomId);
 
-        // Evento para computadoras (Mouse)
-        tiltZone.addEventListener("mousemove", (e) => {
-            handleTilt(e.clientX, e.clientY);
+        peer.on('open', (id) => {
+            document.getElementById('my-peer-id').innerText = id;
         });
 
-        // Evento para celulares (Dedo/Touch)
-        tiltZone.addEventListener("touchmove", (e) => {
-            if (e.touches.length > 0) {
-                const touch = e.touches[0];
-                handleTilt(touch.clientX, touch.clientY);
-            }
+        peer.on('connection', (connection) => {
+            conn = connection;
+            configurarEventosConexion();
         });
 
-        // Restablecer posición suave cuando quitan el dedo o mouse
-        function resetTilt() {
-            tiltCard.style.transform = "rotateX(0deg) rotateY(0deg)";
-        }
-        tiltZone.addEventListener("mouseleave", resetTilt);
-        tiltZone.addEventListener("touchend", resetTilt);
-
-
-        // 2. LOGÍSTICA DE CAPAS DE ACCESORIOS SÚPER INMERSIVAS
-        function toggleCover(name, price, elementId, imgUrl, accentColor) {
-            const element = document.getElementById(elementId);
+        function conectarConAmigo() {
+            const targetId = document.getElementById('peer-id-input').value.trim();
+            if (!targetId) return alert('¡Introduce un ID válido!');
             
-            if (selection.cover.name === name) {
-                // Si ya está puesto, lo quitamos con animación de salida
-                selection.cover = { name: "Ninguno", price: 0 };
-                element.classList.remove("selected");
+            document.getElementById('radar-title').innerText = "Abriendo canal P2P...";
+            conn = peer.connect(targetId);
+            configurarEventosConexion();
+        }
+
+        function copiarMiID() {
+            const idText = document.getElementById('my-peer-id').innerText;
+            if(idText && idText !== "Cargando...") {
+                navigator.clipboard.writeText(idText);
+                alert("¡ID copiado!");
+            }
+        }
+
+        function configurarEventosConexion() {
+            let receivedChunks = [];
+            let fileMeta = null;
+
+            conn.on('open', () => {
+                const radarIcon = document.getElementById('radar-icon');
+                radarIcon.innerText = "⚡";
+                radarIcon.style.animation = "none";
+                radarIcon.style.background = "rgba(0, 230, 118, 0.1)";
+                radarIcon.style.borderColor = "var(--verde-exito)";
+
+                document.getElementById('radar-title').innerText = "¡Enlace Establecido!";
+                document.getElementById('radar-title').style.color = "var(--verde-exito)";
+                document.getElementById('radar-sub').innerText = "Vínculo privado con: " + conn.peer;
+
+                document.getElementById('transfer-zone').style.display = 'block';
+            });
+
+            conn.on('data', (data) => {
+                const statusText = document.getElementById('status-text');
+                const progressBar = document.getElementById('progress-bar');
+
+                if (data.type === 'meta') {
+                    receivedChunks = [];
+                    fileMeta = data;
+                    statusText.innerText = `Recibiendo: ${data.name}...`;
+                    statusText.style.color = "var(--naranja-alerta)";
+                    conn.send({ type: 'next' });
+                    return;
+                }
+
+                if (data.type === 'next') {
+                    enviarSiguienteFragmento();
+                    return;
+                }
+
+                if (data.type === 'eof') {
+                    const blob = new Blob(receivedChunks, { type: fileMeta.mime || 'application/octet-stream' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = fileMeta.name;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+
+                    statusText.innerText = `¡${fileMeta.name} guardado con éxito!`;
+                    statusText.style.color = "var(--verde-exito)";
+                    progressBar.style.width = "100%";
+                    progressBar.style.backgroundColor = "var(--verde-exito)";
+                    receivedChunks = [];
+
+                    // DISPARADOR DE MONETIZACIÓN: Abre el Direct Link discretamente tras recibir con éxito
+                    window.open(ADSTERRA_DIRECT_LINK, '_blank');
+                    return;
+                }
+
+                if (data instanceof ArrayBuffer || data.buffer instanceof ArrayBuffer) {
+                    receivedChunks.push(data);
+                    progressBar.style.width = "50%"; 
+                    progressBar.style.backgroundColor = "var(--naranja-alerta)";
+                    conn.send({ type: 'next' });
+                }
+            });
+
+            conn.on('close', () => {
+                alert('La conexión directa se cerró.');
+                window.location.reload();
+            });
+        }
+
+        document.getElementById('file-input').addEventListener('change', function(e) {
+            currentFile = e.target.files[0];
+            if (!currentFile || !conn) return;
+
+            currentOffset = 0;
+            const statusText = document.getElementById('status-text');
+            statusText.innerText = `Procesando archivo binario...`;
+            statusText.style.color = "var(--naranja-alerta)";
+
+            conn.send({ 
+                type: 'meta', 
+                name: currentFile.name, 
+                size: currentFile.size,
+                mime: currentFile.type 
+            });
+        });
+
+        function enviarSiguienteFragmento() {
+            const statusText = document.getElementById('status-text');
+            const progressBar = document.getElementById('progress-bar');
+            
+            if (currentOffset < currentFile.size) {
+                const slice = currentFile.slice(currentOffset, currentOffset + CHUNK_SIZE);
                 
-                coverLayer.classList.remove("active");
-                bgGlow.style.background = "radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, rgba(0,0,0,0) 70%)";
+                fileReader.onload = function(event) {
+                    conn.send(event.target.result);
+                    currentOffset += event.target.result.byteLength;
+                    
+                    const porcentaje = Math.floor((currentOffset / currentFile.size) * 100);
+                    statusText.innerText = `Enviando: ${porcentaje}%`;
+                    statusText.style.color = "var(--azul-electrico)";
+                    progressBar.style.width = `${porcentaje}%`;
+                    progressBar.style.backgroundColor = "var(--azul-electrico)";
+                };
+                
+                fileReader.readAsArrayBuffer(slice);
             } else {
-                // Quitamos selecciones previas
-                document.querySelectorAll("#step-2 .option-item").forEach(el => el.classList.remove("selected"));
-                
-                selection.cover = { name: name, price: price };
-                element.classList.add("selected");
-                
-                // Cambia la foto del cover suelto en la capa superior y activa la animación de caída
-                coverLayer.setAttribute("src", imgUrl);
-                coverLayer.classList.add("active");
-                
-                // Cambia dinámicamente el resplandor de fondo según el color del cover elegido
-                bgGlow.style.background = `radial-gradient(circle, ${accentColor}33 0%, rgba(0,0,0,0) 70%)`;
-            }
-            
-            updateSummaryData();
-        }
+                conn.send({ type: 'eof' });
+                statusText.innerText = `¡${currentFile.name} enviado con éxito!`;
+                statusText.style.color = "var(--verde-exito)";
+                progressBar.style.width = "100%";
+                progressBar.style.backgroundColor = "var(--verde-exito)";
 
-        function selectModel(modelName, accentColor) {
-            selectedModel = modelName;
-            updateSummaryData();
-        }
-
-        // ARREGLO BOTÓN ATRÁS: Desmonta el accesorio inmediatamente
-        function cleanVisualsOnBack() {
-            selection.cover = { name: "Ninguno", price: 0 };
-            document.querySelectorAll("#step-2 .option-item").forEach(el => el.classList.remove("selected"));
-            coverLayer.classList.remove("active");
-            bgGlow.style.background = "radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, rgba(0,0,0,0) 70%)";
-            updateSummaryData();
-        }
-
-        function updateSummaryData() {
-            document.getElementById("sum-model").innerText = selectedModel;
-            document.getElementById("sum-cover").innerText = selection.cover.name + (selection.cover.price > 0 ? ` ($${selection.cover.price.toFixed(2)})` : "");
-            
-            const total = selection.cover.price;
-            document.getElementById("sum-total").innerText = `$${total.toFixed(2)}`;
-            buildWhatsAppLink(total);
-        }
-
-        function buildWhatsAppLink(total) {
-            const phoneNumber = "50760000000"; // Tu número comercial de Panamá
-            let message = `🔥 *¡Hola TecnoTrade PTY! Deseo realizar un pedido:*\\n\\n`;
-            message += `📱 *Modelo:* ${selectedModel}\\n`;
-            message += `📦 *Cover:* ${selection.cover.name}\\n\\n`;
-            message += `💰 *Total del Pedido:* $${total.toFixed(2)}\\n\\n`;
-            message += `📍 _Por favor confírmame disponibilidad para coordinar la entrega._`;
-            
-            const encodedMessage = encodeURIComponent(message);
-            document.getElementById("whatsapp-link").setAttribute("href", `https://wa.me/${phoneNumber}?text=${encodedMessage}`);
-        }
-
-        function changeStep(direction) {
-            // Si el usuario va hacia atrás desde el paso 2 al paso 1, desmontamos los accesorios puestos
-            if (currentStep === 2 && direction === -1) {
-                cleanVisualsOnBack();
-            }
-
-            currentStep += direction;
-            if (currentStep < 1) currentStep = 1;
-            if (currentStep > 3) currentStep = 3;
-            
-            document.querySelectorAll(".step-content").forEach(el => el.classList.remove("active"));
-            document.getElementById(`step-${currentStep}`).classList.add("active");
-
-            document.querySelectorAll(".step-dot").forEach(el => el.classList.remove("active"));
-            for(let i = 1; i <= currentStep; i++) {
-                document.getElementById(`dot-${i}`).classList.add("active");
-            }
-            
-            document.getElementById("btn-back").style.visibility = (currentStep === 1) ? "hidden" : "visible";
-            
-            if (currentStep === 3) {
-                document.getElementById("btn-next").style.display = "none";
-                document.getElementById("whatsapp-link").style.display = "block";
-                updateSummaryData(); 
-            } else {
-                document.getElementById("btn-next").style.display = "block";
-                document.getElementById("whatsapp-link").style.display = "none";
+                // DISPARADOR DE MONETIZACIÓN: Abre el Direct Link tras enviar con éxito
+                window.open(ADSTERRA_DIRECT_LINK, '_blank');
             }
         }
     </script>
